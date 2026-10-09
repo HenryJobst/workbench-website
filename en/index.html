@@ -157,7 +157,7 @@
     font-size: 1.05rem;
     letter-spacing: -0.005em;
     max-width: 38rem;
-    margin: 0;
+    margin: 0 0 1.5rem;
   }
   @media (max-width: 560px) {
     table, thead, tbody, th, td, tr { display: block; }
@@ -175,6 +175,23 @@
   .status-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.9rem; }
   .status-list li { color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
   .status-list li strong { color: var(--fg); font-weight: 600; }
+
+  .faq-list { border-top: 1px solid var(--border); max-width: 42rem; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item summary {
+    padding: 1rem 0;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; color: var(--muted); font-family: var(--mono); flex-shrink: 0; }
+  .faq-item[open] summary::after { content: "-"; }
+  .faq-item p { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
 
   .arch-svg { width: 100%; height: auto; margin-bottom: 1rem; }
   .diagram-caption { color: var(--muted); font-size: 0.92rem; max-width: 38rem; margin: 0; }
@@ -267,6 +284,7 @@
       <a href="#integration">Integration</a>
       <a href="#pricing">Pricing</a>
       <a href="#demo">Demo</a>
+      <a href="#faq">FAQ</a>
       <a href="../">Deutsch</a>
       <a href="mailto:github@jobst-berlin.de">Contact</a>
     </div>
@@ -598,6 +616,47 @@
     </p>
     <div class="cta-row">
       <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Demo">Request a technical demo</a>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <p class="section-label">FAQ</p>
+    <h2>A closer look</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Does this work with the coding agent I already use?</summary>
+        <p>
+          Workbench runs as a Claude Code plugin today. The gate, the pipeline checks, and the broker
+          mode are not tied to one vendor. Any agent that can open a merge request through the normal
+          git flow can be gated the same way. Support for other agent runtimes is a matter of writing
+          the integration, not changing the trust model.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>Where does the agent's work actually run, on my machine or somewhere else?</summary>
+        <p>
+          Wherever you run the runner: your own machine, your own CI, or a self-hosted GitLab or GitHub
+          runner. Workbench does not run a hosted service that executes your code. In broker mode, the
+          agent itself never holds git host credentials. The broker process does, and only the broker
+          talks to the git host.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>What happens if the review step fails to run, for example a model outage or a session limit?</summary>
+        <p>
+          The gate defaults to requiring a human review instead of merging anyway. A missing or failed
+          check counts as "not satisfied," not as "skip."
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>Is this the same as a review bot or linter?</summary>
+        <p>
+          A review bot adds a check. Workbench adds a merge gate. Plan, implementation, review, and
+          acceptance run as a fixed sequence, and the agent's own status reports can only raise what is
+          required before merge, never lower it. The six attack cases above show what that boundary
+          catches and what it does not.
+        </p>
+      </details>
     </div>
   </section>
 

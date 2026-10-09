@@ -157,7 +157,7 @@
     font-size: 1.05rem;
     letter-spacing: -0.005em;
     max-width: 38rem;
-    margin: 0;
+    margin: 0 0 1.5rem;
   }
   @media (max-width: 560px) {
     table, thead, tbody, th, td, tr { display: block; }
@@ -175,6 +175,23 @@
   .status-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.9rem; }
   .status-list li { color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
   .status-list li strong { color: var(--fg); font-weight: 600; }
+
+  .faq-list { border-top: 1px solid var(--border); max-width: 42rem; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item summary {
+    padding: 1rem 0;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; color: var(--muted); font-family: var(--mono); flex-shrink: 0; }
+  .faq-item[open] summary::after { content: "-"; }
+  .faq-item p { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
 
   .arch-svg { width: 100%; height: auto; margin-bottom: 1rem; }
   .diagram-caption { color: var(--muted); font-size: 0.92rem; max-width: 38rem; margin: 0; }
@@ -267,6 +284,7 @@
       <a href="#integration">Integration</a>
       <a href="#preise">Preise</a>
       <a href="#demo">Demo</a>
+      <a href="#faq">FAQ</a>
       <a href="en/">English</a>
       <a href="mailto:github@jobst-berlin.de">Kontakt</a>
     </div>
@@ -443,7 +461,7 @@
 
   <section class="attacks" id="angriffe">
     <p class="section-label">Angriff → Gegenmaßnahme</p>
-    <h2>Vier konkrete Fälle</h2>
+    <h2>Sechs konkrete Fälle</h2>
     <div class="attack-grid">
       <div class="attack-card">
         <h3>Manipulierter Status oder gefälschte Evidenz</h3>
@@ -602,6 +620,49 @@
     </p>
     <div class="cta-row">
       <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Demo">Technische Demo anfragen</a>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <p class="section-label">FAQ</p>
+    <h2>Noch Fragen?</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Funktioniert das mit dem Coding-Agenten, den ich schon nutze?</summary>
+        <p>
+          Workbench läuft heute als Claude-Code-Plugin. Die Schranke, die Pipeline-Prüfungen und der
+          Broker-Modus sind nicht an einen Hersteller gebunden. Jeder Agent, der einen Merge Request
+          über den normalen Git-Ablauf öffnet, lässt sich auf dieselbe Weise an die Schranke binden.
+          Unterstützung für andere Agenten-Laufzeiten ist eine Frage der Integration, nicht des
+          Vertrauensmodells.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>Wo läuft die Arbeit des Agenten tatsächlich, auf meinem Rechner oder woanders?</summary>
+        <p>
+          Dort, wo du den Runner betreibst: auf dem eigenen Rechner, in der eigenen CI oder auf einem
+          selbst betriebenen GitLab- oder GitHub-Runner. Workbench betreibt keinen gehosteten Dienst,
+          der den Code ausführt. Im Broker-Modus hält der Agent selbst nie Zugangsdaten zum Git-Dienst.
+          Das hält der Broker-Prozess, und nur der Broker spricht mit dem Git-Dienst.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>Was passiert, wenn der Review-Schritt nicht durchläuft, etwa bei einem Modellausfall oder einem Session-Limit?</summary>
+        <p>
+          Die Schranke verlangt dann standardmäßig ein menschliches Review, statt trotzdem zu mergen.
+          Eine fehlende oder fehlgeschlagene Prüfung zählt als "nicht erfüllt", nicht als
+          "übersprungen".
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>Ist das dasselbe wie ein Review-Bot oder ein Linter?</summary>
+        <p>
+          Ein Review-Bot fügt eine Prüfung hinzu. Workbench fügt eine Schranke vor dem Merge hinzu.
+          Plan, Implementierung, Review und Abnahme laufen als feste Abfolge, und die eigenen
+          Statusmeldungen des Agenten können die Anforderung vor dem Merge nur erhöhen, nie senken. Die
+          sechs Angriffsfälle oben zeigen, was diese Grenze abdeckt und was nicht.
+        </p>
+      </details>
     </div>
   </section>
 

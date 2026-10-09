@@ -129,6 +129,10 @@
     td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
   }
 
+  .principle-intro { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin: 1.75rem 0 0.75rem; }
+  .principle-list { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.95rem; }
+  .principle-list li { margin-bottom: 0.4rem; }
+
   .status-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.9rem; }
   .status-list li { color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
   .status-list li strong { color: var(--fg); font-weight: 600; }
@@ -326,6 +330,14 @@
       abschwächen, nur verschärfen. Ein Agent kann sich keine Freigabe erschleichen, indem er behauptet,
       etwas sei schon erledigt oder geprüft. Das ist die Vertrauensgrenze zwischen Agent und Freigabe.
     </p>
+    <p class="principle-intro">Entscheidet Code, nicht das Modell:</p>
+    <ul class="principle-list">
+      <li>ob eine Freigabe gültig ist</li>
+      <li>ob ein Phasenwechsel erlaubt ist</li>
+      <li>ob der Plan jedes Kriterium abdeckt</li>
+      <li>ob Tests bestanden sind, und ob dabei welche abgeschwächt wurden</li>
+      <li>ob der Merge Request überhaupt angelegt werden darf</li>
+    </ul>
   </section>
 
   <section class="diagram" id="architektur">
@@ -412,6 +424,16 @@
         <h3>Akzeptanzkriterium nur auf dem Papier erfüllt</h3>
         <p>Ein Plan ordnet einem Kriterium eine Lösung zu, die tatsächliche Implementierung erfüllt es aber nicht.</p>
         <p class="counter"><strong>Workbench.</strong> Die Abnahme prüft das Kriterium gegen den tatsächlichen Stand, nicht allein gegen die Zuordnung im Plan.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Manipuliertes Ticket versucht, auf Zugangsdaten oder Netzwerk zuzugreifen</h3>
+        <p>Ein präparierter Tickettext versucht, den Agenten zum Lesen von SSH-Schlüsseln, Cloud-Zugangsdaten oder beliebigen Netzwerkzielen zu bewegen.</p>
+        <p class="counter"><strong>Workbench.</strong> Ein Sicherheitsprofil sperrt Zugangsdaten-Dateien, Umgebungsvariablen nach Default-Deny und das Netzwerk auf eine Erlaubnisliste. Startet die Sandbox nicht, startet der Agent nicht.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Manipulierter Titel oder Beschreibung des Merge Requests</h3>
+        <p>Ein Angreifer versucht, den automatisierten Prüfer über den Text des Merge Requests zu steuern.</p>
+        <p class="counter"><strong>Workbench.</strong> Titel, Branch-Name und Beschreibung werden nie in Skripte eingesetzt. Der Prüfer hat kein Bash, WebFetch oder WebSearch, nur Lesezugriff auf die Eingabe.</p>
       </div>
     </div>
   </section>

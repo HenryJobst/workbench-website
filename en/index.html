@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workbench — Deterministic gates for AI coding agents</title>
+<meta name="description" content="Workbench enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.">
+<link rel="alternate" hreflang="de" href="https://henryjobst.github.io/workbench-website/">
+<link rel="alternate" hreflang="en" href="https://henryjobst.github.io/workbench-website/en/">
+<link rel="alternate" hreflang="x-default" href="https://henryjobst.github.io/workbench-website/">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #111111;
+    --muted: #666666;
+    --border: #e4e4e4;
+    --mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--fg);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--fg); }
+
+  nav {
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+  }
+  nav .inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  nav .brand { font-weight: 600; letter-spacing: -0.01em; text-decoration: none; }
+  nav .links { display: flex; gap: 1.25rem; font-size: 0.9rem; }
+  nav .links a { text-decoration: none; color: var(--muted); white-space: nowrap; }
+  nav .links a:hover { color: var(--fg); }
+
+  main { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 4.5rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  .hero { padding-top: 4rem; }
+  .hero h1 {
+    font-size: 2.1rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0 0 1.25rem;
+  }
+  .hero p.lead {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 34rem;
+    margin: 0 0 2rem;
+  }
+  ul.evidence {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0;
+    margin: 0 0 2rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  ul.evidence li::before { content: "— "; }
+
+  .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .cta {
+    display: inline-block;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--fg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .cta.primary { background: var(--fg); color: var(--bg); }
+  .cta.primary:hover { background: #333; }
+  .cta.secondary { color: var(--fg); }
+  .cta.secondary:hover { background: #f3f3f3; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.75rem;
+  }
+  h2 { font-size: 1.5rem; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-bottom: 1.5rem;
+  }
+  th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  td:first-child { color: var(--fg); }
+  td:not(:first-child) { color: var(--muted); }
+  tbody tr:last-child td { border-bottom: none; }
+  .comparison-note {
+    font-size: 1.05rem;
+    letter-spacing: -0.005em;
+    max-width: 38rem;
+    margin: 0;
+  }
+  @media (max-width: 560px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tr { border-bottom: 1px solid var(--border); padding: 0.75rem 0; }
+    tbody tr:last-child { border-bottom: none; }
+    td { border-bottom: none; padding: 0.15rem 0; }
+    td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
+  }
+
+  .principle-intro { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin: 1.75rem 0 0.75rem; }
+  .principle-list { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.95rem; }
+  .principle-list li { margin-bottom: 0.4rem; }
+
+  .status-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.9rem; }
+  .status-list li { color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
+  .status-list li strong { color: var(--fg); font-weight: 600; }
+
+  .arch-svg { width: 100%; height: auto; margin-bottom: 1rem; }
+  .diagram-caption { color: var(--muted); font-size: 0.92rem; max-width: 38rem; margin: 0; }
+
+  .attack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .attack-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+  }
+  .attack-card h3 { font-size: 0.98rem; margin: 0 0 0.6rem; }
+  .attack-card p { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--muted); }
+  .attack-card p.counter { margin-bottom: 0; color: var(--fg); }
+  .attack-card p.counter strong { font-weight: 600; }
+  @media (max-width: 560px) {
+    .attack-grid { grid-template-columns: 1fr; }
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 1.75rem; }
+  .step { display: flex; gap: 1.25rem; }
+  .step .num {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex: 0 0 2.25rem;
+    padding-top: 0.15rem;
+  }
+  .step .body h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .step .body p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .principle blockquote {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    font-size: 1.3rem;
+    font-style: normal;
+    letter-spacing: -0.01em;
+    border: none;
+  }
+  .principle p { color: var(--muted); max-width: 38rem; }
+
+  .audience p { color: var(--muted); max-width: 38rem; }
+  .audience .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.15rem 0.5rem;
+    margin-top: 1rem;
+  }
+
+  footer {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 560px) {
+    .hero h1 { font-size: 1.7rem; }
+    nav .links { gap: 0.9rem; font-size: 0.85rem; }
+    section { padding: 3rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a class="brand" href="#top">Workbench</a>
+    <div class="links">
+      <a href="#lifecycle">Lifecycle</a>
+      <a href="#comparison">Comparison</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#attacks">Attacks</a>
+      <a href="#principle">Principle</a>
+      <a href="#who">Who it's for</a>
+      <a href="#roles">Value</a>
+      <a href="#integration">Integration</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#demo">Demo</a>
+      <a href="../">Deutsch</a>
+      <a href="mailto:github@jobst-berlin.de">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero" id="top">
+    <h1>Autonomous coding agents.<br>Controlled permissions.<br>Checkable approvals.</h1>
+    <p class="lead">
+      Workbench turns a coding agent into a controlled development process: an approved plan,
+      independent review, criteria-bound acceptance, and a binding gate before merge.
+    </p>
+    <p class="lead">
+      The agent can propose work and change code. It does not decide itself whether that work gets
+      approved.
+    </p>
+    <ul class="evidence">
+      <li>Approval tied to a specific plan</li>
+      <li>Git host credentials stay outside the agent (broker mode)</li>
+      <li>Pipeline re-checks independently</li>
+    </ul>
+    <div class="cta-row">
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Demo">Request a technical demo</a>
+      <a class="cta secondary" href="#lifecycle">How it works</a>
+    </div>
+  </section>
+
+  <section id="lifecycle">
+    <p class="section-label">The lifecycle</p>
+    <h2>Five steps, each with its own requirement</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <div class="body">
+          <h3>Plan</h3>
+          <p>The agent writes a plan. A human approves it before any code exists.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <div class="body">
+          <h3>Implementation</h3>
+          <p>The agent works on a feature branch. The run's state lives there, not in the agent itself, which can restart at any time.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <div class="body">
+          <h3>Review</h3>
+          <p>An automated, rule-based review checks architecture, security, test quality, and more. Every finding has a traceable origin.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <div class="body">
+          <h3>Acceptance</h3>
+          <p>The criteria recorded in the ticket are checked against the actual state, not against a claim.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">05</div>
+        <div class="body">
+          <h3>Gate</h3>
+          <p>Nothing merges until every requirement is met. No exception the agent can grant itself.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="comparison" id="comparison">
+    <p class="section-label">Comparison</p>
+    <h2>More than a review agent</h2>
+    <table>
+      <thead>
+        <tr><th>Capability</th><th>Plain MR review</th><th>Workbench</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Checks the diff against rules</td><td data-label="Plain MR review">Yes, depending on the system</td><td data-label="Workbench">Yes</td></tr>
+        <tr><td>Checks the whole development process</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Plan through acceptance and gate</td></tr>
+        <tr><td>Ties approval to a specific plan state</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Yes</td></tr>
+        <tr><td>Treats agent-reported state as untrusted</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Explicit architectural principle</td></tr>
+        <tr><td>Checks acceptance criteria against the actual code</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Its own acceptance step</td></tr>
+        <tr><td>Re-evaluates independently in the pipeline</td><td data-label="Plain MR review">Depends on the integration</td><td data-label="Workbench">Part of the design</td></tr>
+        <tr><td>Keeps git host credentials away from the agent</td><td data-label="Plain MR review">Depends on the architecture</td><td data-label="Workbench">Via broker mode</td></tr>
+      </tbody>
+    </table>
+    <p class="comparison-note">
+      "A review agent judges a change. Workbench controls the conditions under which a change may come
+      into existence, get reviewed, get approved, and get merged."
+    </p>
+  </section>
+
+  <section class="principle" id="principle">
+    <p class="section-label">The principle</p>
+    <blockquote>"State can only raise the requirement, never lower it."</blockquote>
+    <p>
+      Any state the agent reports or influences can never weaken a requirement, only tighten it. An
+      agent cannot talk its way into approval by claiming something is already done or already checked.
+      That is the trust boundary between agent and approval.
+    </p>
+    <p class="principle-intro">Code decides, not the model:</p>
+    <ul class="principle-list">
+      <li>whether an approval is valid</li>
+      <li>whether a phase transition is allowed</li>
+      <li>whether the plan covers every criterion</li>
+      <li>whether tests pass, and whether any were weakened</li>
+      <li>whether a merge request can even be created</li>
+    </ul>
+  </section>
+
+  <section class="diagram" id="architecture">
+    <p class="section-label">Architecture</p>
+    <h2>Trust boundaries</h2>
+    <svg viewBox="0 0 760 380" role="img" aria-labelledby="diagram-title diagram-desc" class="arch-svg">
+      <title id="diagram-title">Trust boundaries in Workbench</title>
+      <desc id="diagram-desc">
+        In broker mode, the agent sends only defined operations to the broker, no git host credentials.
+        The broker holds the credentials and talks to the git host. A human approves plan and code. The
+        pipeline reads the git host independently and re-evaluates the conditions. The gate opens only
+        once approval and the pipeline check are both satisfied.
+      </desc>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#111111"></path>
+        </marker>
+      </defs>
+
+      <!-- Row 1: Agent -> Broker -> Git host -->
+      <rect x="20" y="20" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5" stroke-dasharray="4 3"></rect>
+      <text x="100" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Agent</text>
+      <text x="100" y="68" text-anchor="middle" font-size="10" fill="#666666">not trusted</text>
+
+      <rect x="300" y="20" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="380" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Broker</text>
+      <text x="380" y="68" text-anchor="middle" font-size="10" fill="#666666">holds credentials</text>
+
+      <rect x="580" y="20" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="660" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Git host</text>
+      <text x="660" y="68" text-anchor="middle" font-size="10" fill="#666666">repo, MR, state</text>
+
+      <line x1="180" y1="55" x2="298" y2="55" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="239" y="44" text-anchor="middle" font-size="10" fill="#666666">operations</text>
+
+      <line x1="460" y1="55" x2="578" y2="55" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="519" y="44" text-anchor="middle" font-size="10" fill="#666666">credentials</text>
+
+      <!-- Row 2: Human, Pipeline -->
+      <rect x="20" y="180" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="100" y="210" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Human</text>
+      <text x="100" y="228" text-anchor="middle" font-size="10" fill="#666666">approves plan &amp; code</text>
+
+      <rect x="580" y="180" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="660" y="210" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Pipeline</text>
+      <text x="660" y="228" text-anchor="middle" font-size="10" fill="#666666">re-checks independently</text>
+
+      <line x1="660" y1="90" x2="660" y2="178" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="693" y="138" text-anchor="middle" font-size="10" fill="#666666">reads</text>
+
+      <!-- Both feed into the gate at right angles -->
+      <rect x="290" y="310" width="180" height="48" rx="6" fill="#111111"></rect>
+      <text x="380" y="339" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Gate</text>
+
+      <path d="M100,250 L100,334 L288,334" fill="none" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></path>
+      <path d="M660,250 L660,334 L472,334" fill="none" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></path>
+    </svg>
+    <p class="diagram-caption">
+      In broker mode, the agent never reaches the git host directly. The gate opens only once human
+      approval and an independent pipeline check both exist.
+    </p>
+  </section>
+
+  <section class="attacks" id="attacks">
+    <p class="section-label">Attack → countermeasure</p>
+    <h2>Six concrete cases</h2>
+    <div class="attack-grid">
+      <div class="attack-card">
+        <h3>Manipulated status or fabricated evidence</h3>
+        <p>The agent claims a criterion is met or a check has passed.</p>
+        <p class="counter"><strong>Workbench.</strong> The pipeline evaluates the governing conditions independently; agent-reported state cannot weaken a required control.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Plan changed after approval</h3>
+        <p>An already-approved plan no longer matches the current content.</p>
+        <p class="counter"><strong>Workbench.</strong> Plan approval is tied to the confirmed plan state; any change invalidates the old approval.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Agent compromised or influenced by prompt injection</h3>
+        <p>The agent tries to reach privileged actions beyond its actual task.</p>
+        <p class="counter"><strong>Workbench.</strong> In broker mode, the runner mediates defined operations instead of handing git host credentials directly to the agent.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Acceptance criterion met on paper only</h3>
+        <p>A plan maps a criterion to a solution, but the actual implementation does not meet it.</p>
+        <p class="counter"><strong>Workbench.</strong> Acceptance checks the criterion against the actual state, not just against the mapping in the plan.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Manipulated ticket tries to reach credentials or the network</h3>
+        <p>A crafted ticket text tries to get the agent to read SSH keys, cloud credentials, or any network target.</p>
+        <p class="counter"><strong>Workbench.</strong> A security profile blocks credential files, denies environment variables by default, and allows only an approved network list. If the sandbox cannot start, the agent does not start.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Manipulated merge request title or description</h3>
+        <p>An attacker tries to steer the automated reviewer through the merge request text.</p>
+        <p class="counter"><strong>Workbench.</strong> Title, branch name, and description are never inserted into scripts. The reviewer has no Bash, WebFetch, or WebSearch, only read access to its input.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="audience" id="who">
+    <p class="section-label">Who it's for</p>
+    <h2>Teams running agents in production, without blind trust</h2>
+    <p>
+      Workbench is for teams that let AI coding agents take on real work but do not want to just trust
+      them to follow instructions. The gates apply no matter which model or vendor drives the agent.
+    </p>
+    <span class="tag">model-agnostic</span>
+  </section>
+
+  <section class="roles" id="roles">
+    <p class="section-label">Value by role</p>
+    <h2>A different reason for every role</h2>
+    <div class="attack-grid">
+      <div class="attack-card">
+        <h3>Developer</h3>
+        <p>The agent works largely on its own; you are only pulled in when it actually matters, at plan approval and at the final approval step. No need to watch every intermediate step.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Engineering lead</h3>
+        <p>Fewer questions and correction loops, because rules already apply during planning. Every finding is traceable (model, effort, origin), no opaque judgment calls.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Security</h3>
+        <p>Credentials to the git host stay outside the agent in broker mode. The security review target always runs and cannot be turned off. Every approval is tied to an actually checked state, not a claim.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Platform team</h3>
+        <p>A rule set you can extend per project without maintaining your own copy of the whole plugin. Runs on GitLab and GitHub. Configuration lives in the repo itself, not in external infrastructure.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Leadership</h3>
+        <p>Agents work productively without approval processes getting watered down. A traceable record through origin and ticket binding. No dependency on a single model vendor.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="status" id="integration">
+    <p class="section-label">Integration status</p>
+    <h2>What already runs today</h2>
+    <ul class="status-list">
+      <li><strong>GitLab CI.</strong> Actively used in production, Workbench's own pipeline runs on it.</li>
+      <li><strong>GitHub Actions.</strong> Reference template exists, currently tested less heavily in production.</li>
+      <li><strong>Rule set.</strong> Extensible per project, custom review targets and approval rules come in cleanly, existing ones can be replaced or turned off.</li>
+      <li><strong>Reviewer model and effort.</strong> Configurable per project.</li>
+    </ul>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <p class="section-label">Pricing</p>
+    <h2>License model</h2>
+    <p>
+      Tiered by team size and number of repositories, not by pipeline runs.
+    </p>
+    <table>
+      <thead>
+        <tr><th>&nbsp;</th><th>OSS</th><th>Single</th><th>Team</th><th>Business</th><th>Enterprise</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Price</td>
+          <td data-label="OSS">free</td>
+          <td data-label="Single"></td>
+          <td data-label="Team"></td>
+          <td data-label="Business"></td>
+          <td data-label="Enterprise"></td>
+        </tr>
+        <tr>
+          <td>Scope</td>
+          <td data-label="OSS">single license per project</td>
+          <td data-label="Single">1 developer</td>
+          <td data-label="Team">up to 10</td>
+          <td data-label="Business">up to 50</td>
+          <td data-label="Enterprise">custom</td>
+        </tr>
+        <tr>
+          <td>Repositories</td>
+          <td data-label="OSS">1 public open-source project</td>
+          <td data-label="Single">up to 2</td>
+          <td data-label="Team">up to 5</td>
+          <td data-label="Business">up to 25</td>
+          <td data-label="Enterprise">unlimited</td>
+        </tr>
+        <tr>
+          <td>Git host</td>
+          <td data-label="OSS">GitHub or GitLab</td>
+          <td data-label="Single">GitHub or GitLab</td>
+          <td data-label="Team">GitHub or GitLab</td>
+          <td data-label="Business">both</td>
+          <td data-label="Enterprise">both</td>
+        </tr>
+        <tr>
+          <td>Support</td>
+          <td data-label="OSS">community</td>
+          <td data-label="Single">community</td>
+          <td data-label="Team">email</td>
+          <td data-label="Business">priority</td>
+          <td data-label="Enterprise">SLA, onboarding, audit</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="comparison-note">
+      OSS applies to one public repository under a recognized open-source license. Term for the other
+      tiers: 12 months, auto-renewing with a notice period. The customer covers model costs through
+      their own API access; Workbench sells the control layer, not compute time. A pilot run from ticket
+      to merge request is recommended before signing, see Demo below.
+    </p>
+    <div class="cta-row">
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Pricing">Request pricing</a>
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <p class="section-label">Demo</p>
+    <h2>What you'll see in the demo</h2>
+    <p>
+      A real run on a real ticket: an approved plan, implementation on the feature branch, a review run
+      with a blocking finding, and the subsequent approval once every requirement is met.
+    </p>
+    <div class="cta-row">
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Demo">Request a technical demo</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Workbench © 2026</span>
+  <a href="mailto:github@jobst-berlin.de">github@jobst-berlin.de</a>
+</footer>
+
+</body>
+</html>

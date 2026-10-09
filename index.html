@@ -129,6 +129,24 @@
     td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
   }
 
+  .attack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .attack-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+  }
+  .attack-card h3 { font-size: 0.98rem; margin: 0 0 0.6rem; }
+  .attack-card p { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--muted); }
+  .attack-card p.counter { margin-bottom: 0; color: var(--fg); }
+  .attack-card p.counter strong { font-weight: 600; }
+  @media (max-width: 560px) {
+    .attack-grid { grid-template-columns: 1fr; }
+  }
+
   .steps { display: flex; flex-direction: column; gap: 1.75rem; }
   .step { display: flex; gap: 1.25rem; }
   .step .num {
@@ -191,6 +209,7 @@
     <div class="links">
       <a href="#lebenszyklus">Lebenszyklus</a>
       <a href="#abgrenzung">Abgrenzung</a>
+      <a href="#angriffe">Angriffe</a>
       <a href="#prinzip">Prinzip</a>
       <a href="#fuer-wen">Für wen</a>
       <a href="mailto:github@jobst-berlin.de">Kontakt</a>
@@ -296,6 +315,33 @@
       etwas sei schon erledigt oder geprüft. Das ist die Vertrauensgrenze, auf der alles andere in
       Workbench aufbaut.
     </p>
+  </section>
+
+  <section class="attacks" id="angriffe">
+    <p class="section-label">Angriff → Gegenmaßnahme</p>
+    <h2>Vier konkrete Fälle</h2>
+    <div class="attack-grid">
+      <div class="attack-card">
+        <h3>Manipulierter Status oder gefälschte Evidenz</h3>
+        <p>Der Agent behauptet, ein Kriterium sei erfüllt oder eine Prüfung sei erfolgt.</p>
+        <p class="counter"><strong>Workbench:</strong> Die Pipeline wertet maßgebliche Bedingungen unabhängig aus; der Agentenzustand kann erforderliche Kontrollen nicht abschwächen.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Plan nach der Freigabe geändert</h3>
+        <p>Ein bereits genehmigter Plan passt nicht mehr zum aktuellen Inhalt.</p>
+        <p class="counter"><strong>Workbench:</strong> Die Planfreigabe ist an den bestätigten Planstand gebunden; eine Änderung macht die alte Freigabe ungültig.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Agent kompromittiert oder durch Prompt Injection beeinflusst</h3>
+        <p>Der Agent versucht, über seine eigentliche Aufgabe hinaus auf privilegierte Aktionen zuzugreifen.</p>
+        <p class="counter"><strong>Workbench:</strong> Im Broker-Modus vermittelt der Runner definierte Operationen, statt Host-Credentials direkt an den Agenten zu übergeben.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Akzeptanzkriterium nur auf dem Papier erfüllt</h3>
+        <p>Ein Plan ordnet einem Kriterium eine Lösung zu, die tatsächliche Implementierung erfüllt es aber nicht.</p>
+        <p class="counter"><strong>Workbench:</strong> Die Abnahme prüft das Kriterium gegen den tatsächlichen Stand, nicht allein gegen die Zuordnung im Plan.</p>
+      </div>
+    </div>
   </section>
 
   <section class="audience" id="fuer-wen">

@@ -395,6 +395,13 @@
       <li>whether tests pass, and whether any were weakened</li>
       <li>whether a merge request can even be created</li>
     </ul>
+    <p>
+      Locally, the agent can still write a review fingerprint, an acceptance result, or a retry counter
+      into the branch state. Those fields protect against mistakes, not against an agent that
+      deliberately works around them. What actually holds against that case is the pipeline, which
+      recomputes every condition from the git host's own record, and code approval on the host itself,
+      which the agent cannot grant to its own merge request.
+    </p>
   </section>
 
   <section class="diagram" id="architecture">
@@ -636,9 +643,18 @@
         <summary>Where does the agent's work actually run, on my machine or somewhere else?</summary>
         <p>
           Wherever you run the runner: your own machine, your own CI, or a self-hosted GitLab or GitHub
-          runner. Workbench does not run a hosted service that executes your code. In broker mode, the
-          agent itself never holds git host credentials. The broker process does, and only the broker
-          talks to the git host.
+          runner. Workbench does not run a hosted service that executes your code. The default access
+          mode gives the agent its own git host token. Broker mode, where the agent itself never holds
+          credentials and a separate broker process talks to the git host instead, exists for both
+          GitHub and GitLab, but it is opt-in. You set it yourself with <code>zugang = "broker"</code>.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>Does the pipeline run my project's tests?</summary>
+        <p>
+          No. The pipeline never checks out or executes the merge request's code. It only reads the diff
+          as text. Your own tests run in your own CI. The gate does not check whether that CI is green,
+          so add your test suite as a required check in branch protection yourself.
         </p>
       </details>
       <details class="faq-item">

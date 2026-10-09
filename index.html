@@ -658,10 +658,11 @@
       <details class="faq-item">
         <summary>Führt die Pipeline meine Projekttests aus?</summary>
         <p>
-          Nein. Die Pipeline checkt den Code des Merge Requests nie aus und führt ihn nicht aus, sie
-          liest den Diff nur als Text. Deine eigenen Tests laufen in deiner eigenen CI. Die Schranke
-          prüft nicht, ob diese CI grün ist, das musst du selbst als Pflicht-Check in der
-          Branch-Protection eintragen.
+          Nein, die agentische Prüfung checkt den Code des Merge Requests nie aus und führt ihn nicht
+          aus, sie liest den Diff nur als Text. Klassische Unit-Tests sind davon unabhängig. Du kannst
+          sie als ganz normalen CI-Job vor oder neben der agentischen Prüfung laufen lassen, zum
+          Beispiel in derselben Pipeline. Die Schranke selbst prüft nicht, ob dieser Job grün ist, das
+          trägst du selbst als Pflicht-Check in der Branch-Protection ein.
         </p>
       </details>
       <details class="faq-item">

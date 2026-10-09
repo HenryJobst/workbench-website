@@ -652,9 +652,11 @@
       <details class="faq-item">
         <summary>Does the pipeline run my project's tests?</summary>
         <p>
-          No. The pipeline never checks out or executes the merge request's code. It only reads the diff
-          as text. Your own tests run in your own CI. The gate does not check whether that CI is green,
-          so add your test suite as a required check in branch protection yourself.
+          No, the agentic check never checks out or executes the merge request's code. It only reads
+          the diff as text. Classic unit tests are independent of that. You can run them as an ordinary
+          CI job before or alongside the agentic check, for example in the same pipeline. The gate itself
+          does not check whether that job is green, so add your test suite as a required check in branch
+          protection yourself.
         </p>
       </details>
       <details class="faq-item">

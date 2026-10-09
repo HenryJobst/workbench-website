@@ -236,7 +236,7 @@
     </p>
     <ul class="evidence">
       <li>Freigabe an konkreten Plan gebunden</li>
-      <li>Host-Credentials außerhalb des Agenten (Broker-Modus)</li>
+      <li>Zugangsdaten zum Git-Dienst außerhalb des Agenten (Broker-Modus)</li>
       <li>Pipeline prüft unabhängig neu</li>
     </ul>
     <div class="cta-row">
@@ -301,7 +301,7 @@
         <tr><td>Behandelt Agentenzustand als nicht vertrauenswürdig</td><td data-label="Reines MR-Review">Nicht notwendigerweise</td><td data-label="Workbench">Explizites Architekturprinzip</td></tr>
         <tr><td>Prüft Akzeptanzkriterien gegen den tatsächlichen Code</td><td data-label="Reines MR-Review">Nicht notwendigerweise</td><td data-label="Workbench">Eigener Abnahmeschritt</td></tr>
         <tr><td>Bewertet unabhängig in der Pipeline neu</td><td data-label="Reines MR-Review">Abhängig von der Integration</td><td data-label="Workbench">Bestandteil des Konzepts</td></tr>
-        <tr><td>Hält Host-Credentials vom Agenten fern</td><td data-label="Reines MR-Review">Abhängig von der Architektur</td><td data-label="Workbench">Über den Broker-Modus</td></tr>
+        <tr><td>Hält Zugangsdaten zum Git-Dienst vom Agenten fern</td><td data-label="Reines MR-Review">Abhängig von der Architektur</td><td data-label="Workbench">Über den Broker-Modus</td></tr>
       </tbody>
     </table>
     <p class="comparison-note">
@@ -328,8 +328,8 @@
       <title id="diagram-title">Vertrauensgrenzen in Workbench</title>
       <desc id="diagram-desc">
         Der Agent sendet im Broker-Modus nur definierte Operationen an den Broker, keine
-        Host-Credentials. Der Broker hält die Credentials und spricht mit dem Git-Host. Ein Mensch gibt
-        Plan und Code frei. Die Pipeline liest den Git-Host unabhängig und wertet die Bedingungen neu
+        Zugangsdaten zum Git-Dienst. Der Broker hält die Zugangsdaten und spricht mit dem Git-Dienst. Ein Mensch gibt
+        Plan und Code frei. Die Pipeline liest den Git-Dienst unabhängig und wertet die Bedingungen neu
         aus. Erst wenn Freigabe und Pipeline-Prüfung beide erfüllt sind, öffnet die Schranke.
       </desc>
       <defs>
@@ -345,17 +345,17 @@
 
       <rect x="250" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
       <text x="325" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Broker</text>
-      <text x="325" y="58" text-anchor="middle" font-size="10" fill="#666666">hält Credentials</text>
+      <text x="325" y="58" text-anchor="middle" font-size="10" fill="#666666">hält Zugangsdaten</text>
 
       <rect x="490" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
-      <text x="565" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Git-Host</text>
+      <text x="565" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Git-Dienst</text>
       <text x="565" y="58" text-anchor="middle" font-size="10" fill="#666666">Repo, MR, Zustand</text>
 
       <line x1="160" y1="45" x2="248" y2="45" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
-      <text x="204" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Operationen, keine Credentials</text>
+      <text x="204" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Operationen, keine Zugangsdaten</text>
 
       <line x1="400" y1="45" x2="488" y2="45" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
-      <text x="444" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Credentials</text>
+      <text x="444" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Zugangsdaten</text>
 
       <rect x="10" y="150" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
       <text x="85" y="180" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Mensch</text>
@@ -375,7 +375,7 @@
       <line x1="565" y1="220" x2="450" y2="248" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
     </svg>
     <p class="diagram-caption">
-      Der Agent erreicht den Git-Host im Broker-Modus nie direkt. Die Schranke öffnet erst, wenn
+      Der Agent erreicht den Git-Dienst im Broker-Modus nie direkt. Die Schranke öffnet erst, wenn
       menschliche Freigabe und unabhängige Pipeline-Prüfung beide vorliegen.
     </p>
   </section>
@@ -397,7 +397,7 @@
       <div class="attack-card">
         <h3>Agent kompromittiert oder durch Prompt Injection beeinflusst</h3>
         <p>Der Agent versucht, über seine eigentliche Aufgabe hinaus auf privilegierte Aktionen zuzugreifen.</p>
-        <p class="counter"><strong>Workbench:</strong> Im Broker-Modus vermittelt der Runner definierte Operationen, statt Host-Credentials direkt an den Agenten zu übergeben.</p>
+        <p class="counter"><strong>Workbench:</strong> Im Broker-Modus vermittelt der Runner definierte Operationen, statt Zugangsdaten zum Git-Dienst direkt an den Agenten zu übergeben.</p>
       </div>
       <div class="attack-card">
         <h3>Akzeptanzkriterium nur auf dem Papier erfüllt</h3>

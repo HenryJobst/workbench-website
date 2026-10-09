@@ -129,6 +129,10 @@
     td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
   }
 
+  .status-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.9rem; }
+  .status-list li { color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
+  .status-list li strong { color: var(--fg); font-weight: 600; }
+
   .arch-svg { width: 100%; height: auto; margin-bottom: 1rem; }
   .diagram-caption { color: var(--muted); font-size: 0.92rem; max-width: 38rem; margin: 0; }
 
@@ -216,6 +220,7 @@
       <a href="#angriffe">Angriffe</a>
       <a href="#prinzip">Prinzip</a>
       <a href="#fuer-wen">Für wen</a>
+      <a href="#integration">Integration</a>
       <a href="#demo">Demo</a>
       <a href="mailto:github@jobst-berlin.de">Kontakt</a>
     </div>
@@ -417,6 +422,17 @@
       Modell oder welcher Anbieter den Agenten antreibt.
     </p>
     <span class="tag">agentenagnostisch</span>
+  </section>
+
+  <section class="status" id="integration">
+    <p class="section-label">Integrationsstatus</p>
+    <h2>Was heute schon läuft</h2>
+    <ul class="status-list">
+      <li><strong>GitLab-CI</strong> — aktiv erprobt: die eigene Produktivpipeline von Workbench läuft darüber.</li>
+      <li><strong>GitHub Actions</strong> — Referenzvorlage vorhanden, aktuell weniger intensiv in Produktion erprobt.</li>
+      <li><strong>Regelwerk</strong> — projektspezifisch erweiterbar: eigene Review-Ziele und Freigaberegeln kommen einfach dazu, bestehende lassen sich ersetzen oder abschalten.</li>
+      <li><strong>Prüfer-Modell und -Aufwand</strong> — projektseitig einstellbar.</li>
+    </ul>
   </section>
 
   <section class="demo" id="demo">

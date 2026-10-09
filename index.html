@@ -1,10 +1,247 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <title>Workbench</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workbench — Deterministische Gates für KI-Coding-Agenten</title>
+<meta name="description" content="Workbench erzwingt Plan, Review, Abnahme und Gate für KI-Coding-Agenten über prüfbare, deterministische Regeln statt reinem Prompt-Vertrauen.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #111111;
+    --muted: #666666;
+    --border: #e4e4e4;
+    --mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--fg);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--fg); }
+
+  nav {
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+  }
+  nav .inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  nav .brand { font-weight: 600; letter-spacing: -0.01em; text-decoration: none; }
+  nav .links { display: flex; gap: 1.25rem; font-size: 0.9rem; }
+  nav .links a { text-decoration: none; color: var(--muted); }
+  nav .links a:hover { color: var(--fg); }
+
+  main { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 4.5rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  .hero { padding-top: 4rem; }
+  .hero h1 {
+    font-size: 2.1rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0 0 1.25rem;
+  }
+  .hero p.lead {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 34rem;
+    margin: 0 0 2rem;
+  }
+  .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .cta {
+    display: inline-block;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--fg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .cta.primary { background: var(--fg); color: var(--bg); }
+  .cta.primary:hover { background: #333; }
+  .cta.secondary { color: var(--fg); }
+  .cta.secondary:hover { background: #f3f3f3; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.75rem;
+  }
+  h2 { font-size: 1.5rem; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
+
+  .steps { display: flex; flex-direction: column; gap: 1.75rem; }
+  .step { display: flex; gap: 1.25rem; }
+  .step .num {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex: 0 0 2.25rem;
+    padding-top: 0.15rem;
+  }
+  .step .body h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .step .body p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .principle blockquote {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    font-size: 1.3rem;
+    font-style: normal;
+    letter-spacing: -0.01em;
+    border: none;
+  }
+  .principle p { color: var(--muted); max-width: 38rem; }
+
+  .audience p { color: var(--muted); max-width: 38rem; }
+  .audience .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.15rem 0.5rem;
+    margin-top: 1rem;
+  }
+
+  footer {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 560px) {
+    .hero h1 { font-size: 1.7rem; }
+    nav .links { gap: 0.9rem; font-size: 0.85rem; }
+    section { padding: 3rem 0; }
+  }
+</style>
 </head>
 <body>
-  <p>Platzhalter — Inhalt folgt (Issue root/workbench#201).</p>
+
+<nav>
+  <div class="inner">
+    <a class="brand" href="#top">Workbench</a>
+    <div class="links">
+      <a href="#lebenszyklus">Lebenszyklus</a>
+      <a href="#prinzip">Prinzip</a>
+      <a href="#fuer-wen">Für wen</a>
+      <a href="mailto:github@jobst-berlin.de">Kontakt</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero" id="top">
+    <h1>Dein Coding-Agent folgt Anweisungen.<br>Workbench erzwingt sie.</h1>
+    <p class="lead">
+      Plan, Review, Abnahme und Merge laufen über prüfbare, deterministische Gates –
+      nicht nur über Prompt-Vertrauen.
+    </p>
+    <div class="cta-row">
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench">Zugang anfragen</a>
+      <a class="cta secondary" href="#lebenszyklus">Wie es funktioniert</a>
+    </div>
+  </section>
+
+  <section id="lebenszyklus">
+    <p class="section-label">Der Lebenszyklus</p>
+    <h2>Fünf Schritte, jeder mit eigener Pflicht</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <div class="body">
+          <h3>Plan</h3>
+          <p>Der Agent schreibt einen Plan. Ein Mensch gibt ihn frei, bevor Code entsteht.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <div class="body">
+          <h3>Implementierung</h3>
+          <p>Der Agent arbeitet im Feature-Branch. Der Zustand des Laufs wird dort geführt – nicht im Agenten selbst, der sich jederzeit neu starten kann.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <div class="body">
+          <h3>Review</h3>
+          <p>Ein automatisiertes, regelbasiertes Review prüft Architektur, Sicherheit, Testqualität und mehr – mit nachvollziehbarer Herkunft jedes Befunds.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <div class="body">
+          <h3>Abnahme</h3>
+          <p>Die im Ticket festgehaltenen Kriterien werden gegen den tatsächlichen Stand geprüft, nicht gegen eine Behauptung.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">05</div>
+        <div class="body">
+          <h3>Gate</h3>
+          <p>Gemerged wird erst, wenn jede Pflicht erfüllt ist. Keine Ausnahme, die der Agent sich selbst geben kann.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="principle" id="prinzip">
+    <p class="section-label">Das Prinzip</p>
+    <blockquote>„Zustand kann die Pflicht nur erhöhen."</blockquote>
+    <p>
+      Jeder vom Agenten selbst gemeldete oder beeinflusste Zustand darf eine Anforderung niemals
+      abschwächen – nur verschärfen. Ein Agent kann sich keine Freigabe erschleichen, indem er behauptet,
+      etwas sei schon erledigt oder geprüft. Das ist die Vertrauensgrenze, auf der alles andere in
+      Workbench aufbaut.
+    </p>
+  </section>
+
+  <section class="audience" id="fuer-wen">
+    <p class="section-label">Für wen</p>
+    <h2>Teams, die Agenten produktiv einsetzen – ohne blindes Vertrauen</h2>
+    <p>
+      Workbench ist für Teams, die KI-Coding-Agenten echte Aufgaben übernehmen lassen, aber nicht nur
+      auf deren Einhaltung von Anweisungen vertrauen wollen. Die Gates gelten unabhängig davon, welches
+      Modell oder welcher Anbieter den Agenten antreibt.
+    </p>
+    <span class="tag">agentenagnostisch</span>
+  </section>
+
+</main>
+
+<footer>
+  <span>Workbench © 2026</span>
+  <a href="mailto:github@jobst-berlin.de">github@jobst-berlin.de</a>
+</footer>
+
 </body>
 </html>

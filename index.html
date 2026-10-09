@@ -129,6 +129,9 @@
     td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
   }
 
+  .arch-svg { width: 100%; height: auto; margin-bottom: 1rem; }
+  .diagram-caption { color: var(--muted); font-size: 0.92rem; max-width: 38rem; margin: 0; }
+
   .attack-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -209,6 +212,7 @@
     <div class="links">
       <a href="#lebenszyklus">Lebenszyklus</a>
       <a href="#abgrenzung">Abgrenzung</a>
+      <a href="#architektur">Architektur</a>
       <a href="#angriffe">Angriffe</a>
       <a href="#prinzip">Prinzip</a>
       <a href="#fuer-wen">Für wen</a>
@@ -302,7 +306,7 @@
     </table>
     <p class="comparison-note">
       „Ein Review-Agent bewertet eine Änderung. Workbench kontrolliert, unter welchen Bedingungen eine
-      Änderung entstehen, geprüft, freigegeben und gemerged werden darf."
+      Änderung entstehen darf und wie sie geprüft, freigegeben und gemerged wird."
     </p>
   </section>
 
@@ -314,6 +318,65 @@
       abschwächen – nur verschärfen. Ein Agent kann sich keine Freigabe erschleichen, indem er behauptet,
       etwas sei schon erledigt oder geprüft. Das ist die Vertrauensgrenze, auf der alles andere in
       Workbench aufbaut.
+    </p>
+  </section>
+
+  <section class="diagram" id="architektur">
+    <p class="section-label">Architektur</p>
+    <h2>Vertrauensgrenzen</h2>
+    <svg viewBox="0 0 740 300" role="img" aria-labelledby="diagram-title diagram-desc" class="arch-svg">
+      <title id="diagram-title">Vertrauensgrenzen in Workbench</title>
+      <desc id="diagram-desc">
+        Der Agent sendet im Broker-Modus nur definierte Operationen an den Broker, keine
+        Host-Credentials. Der Broker hält die Credentials und spricht mit dem Git-Host. Ein Mensch gibt
+        Plan und Code frei. Die Pipeline liest den Git-Host unabhängig und wertet die Bedingungen neu
+        aus. Erst wenn Freigabe und Pipeline-Prüfung beide erfüllt sind, öffnet die Schranke.
+      </desc>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#111111"></path>
+        </marker>
+      </defs>
+
+      <!-- Vertrauensgrenze um den Agenten -->
+      <rect x="10" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5" stroke-dasharray="4 3"></rect>
+      <text x="85" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Agent</text>
+      <text x="85" y="58" text-anchor="middle" font-size="10" fill="#666666">nicht vertrauenswürdig</text>
+
+      <rect x="250" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="325" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Broker</text>
+      <text x="325" y="58" text-anchor="middle" font-size="10" fill="#666666">hält Credentials</text>
+
+      <rect x="490" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="565" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Git-Host</text>
+      <text x="565" y="58" text-anchor="middle" font-size="10" fill="#666666">Repo, MR, Zustand</text>
+
+      <line x1="160" y1="45" x2="248" y2="45" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="204" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Operationen, keine Credentials</text>
+
+      <line x1="400" y1="45" x2="488" y2="45" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="444" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Credentials</text>
+
+      <rect x="10" y="150" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="85" y="180" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Mensch</text>
+      <text x="85" y="198" text-anchor="middle" font-size="10" fill="#666666">genehmigt Plan &amp; Code</text>
+
+      <rect x="490" y="150" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="565" y="180" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Pipeline</text>
+      <text x="565" y="198" text-anchor="middle" font-size="10" fill="#666666">prüft unabhängig neu</text>
+
+      <line x1="565" y1="80" x2="565" y2="148" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="632" y="118" text-anchor="middle" font-size="9.5" fill="#666666">liest Stand</text>
+
+      <rect x="265" y="245" width="210" height="45" rx="6" fill="#111111"></rect>
+      <text x="370" y="272" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Schranke</text>
+
+      <line x1="85" y1="220" x2="300" y2="248" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <line x1="565" y1="220" x2="450" y2="248" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+    </svg>
+    <p class="diagram-caption">
+      Der Agent erreicht den Git-Host im Broker-Modus nie direkt. Die Schranke öffnet erst, wenn
+      menschliche Freigabe und unabhängige Pipeline-Prüfung beide vorliegen.
     </p>
   </section>
 

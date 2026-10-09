@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workbench — Deterministische Gates für KI-Coding-Agenten</title>
-<meta name="description" content="Workbench erzwingt Plan, Review, Abnahme und Gate für KI-Coding-Agenten über prüfbare, deterministische Regeln statt reinem Prompt-Vertrauen.">
+<title>Workbench — Deterministische Schranken für KI-Coding-Agenten</title>
+<meta name="description" content="Workbench erzwingt Plan, Review, Abnahme und eine verbindliche Schranke vor dem Merge für KI-Coding-Agenten – über prüfbare, deterministische Regeln statt reinem Prompt-Vertrauen.">
 <style>
   :root {
     --bg: #ffffff;
@@ -66,6 +66,19 @@
     max-width: 34rem;
     margin: 0 0 2rem;
   }
+  ul.evidence {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0;
+    margin: 0 0 2rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  ul.evidence li::before { content: "— "; }
+
   .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
   .cta {
     display: inline-block;
@@ -161,11 +174,21 @@
 <main>
 
   <section class="hero" id="top">
-    <h1>Dein Coding-Agent folgt Anweisungen.<br>Workbench erzwingt sie.</h1>
+    <h1>Autonome Coding-Agenten.<br>Kontrollierte Berechtigungen.<br>Prüfbare Freigaben.</h1>
     <p class="lead">
-      Plan, Review, Abnahme und Merge laufen über prüfbare, deterministische Gates –
-      nicht nur über Prompt-Vertrauen.
+      Workbench macht aus einem Coding-Agenten einen kontrollierten Entwicklungsprozess: mit genehmigtem
+      Plan, unabhängiger Prüfung, kriteriengebundener Abnahme und einer verbindlichen Schranke vor dem
+      Merge.
     </p>
+    <p class="lead">
+      Der Agent darf Arbeit vorschlagen und Code ändern. Er entscheidet nicht selbst, ob seine Arbeit
+      freigegeben ist.
+    </p>
+    <ul class="evidence">
+      <li>Freigabe an konkreten Plan gebunden</li>
+      <li>Host-Credentials außerhalb des Agenten (Broker-Modus)</li>
+      <li>Pipeline prüft unabhängig neu</li>
+    </ul>
     <div class="cta-row">
       <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench">Zugang anfragen</a>
       <a class="cta secondary" href="#lebenszyklus">Wie es funktioniert</a>
@@ -207,7 +230,7 @@
       <div class="step">
         <div class="num">05</div>
         <div class="body">
-          <h3>Gate</h3>
+          <h3>Schranke</h3>
           <p>Gemerged wird erst, wenn jede Pflicht erfüllt ist. Keine Ausnahme, die der Agent sich selbst geben kann.</p>
         </div>
       </div>
@@ -230,7 +253,7 @@
     <h2>Teams, die Agenten produktiv einsetzen – ohne blindes Vertrauen</h2>
     <p>
       Workbench ist für Teams, die KI-Coding-Agenten echte Aufgaben übernehmen lassen, aber nicht nur
-      auf deren Einhaltung von Anweisungen vertrauen wollen. Die Gates gelten unabhängig davon, welches
+      auf deren Einhaltung von Anweisungen vertrauen wollen. Die Schranken gelten unabhängig davon, welches
       Modell oder welcher Anbieter den Agenten antreibt.
     </p>
     <span class="tag">agentenagnostisch</span>

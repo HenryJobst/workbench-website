@@ -103,6 +103,32 @@
   }
   h2 { font-size: 1.5rem; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
 
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-bottom: 1.5rem;
+  }
+  th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  td:first-child { color: var(--fg); }
+  td:not(:first-child) { color: var(--muted); }
+  tbody tr:last-child td { border-bottom: none; }
+  .comparison-note {
+    font-size: 1.05rem;
+    letter-spacing: -0.005em;
+    max-width: 38rem;
+    margin: 0;
+  }
+  @media (max-width: 560px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tr { border-bottom: 1px solid var(--border); padding: 0.75rem 0; }
+    tbody tr:last-child { border-bottom: none; }
+    td { border-bottom: none; padding: 0.15rem 0; }
+    td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
+  }
+
   .steps { display: flex; flex-direction: column; gap: 1.75rem; }
   .step { display: flex; gap: 1.25rem; }
   .step .num {
@@ -164,6 +190,7 @@
     <a class="brand" href="#top">Workbench</a>
     <div class="links">
       <a href="#lebenszyklus">Lebenszyklus</a>
+      <a href="#abgrenzung">Abgrenzung</a>
       <a href="#prinzip">Prinzip</a>
       <a href="#fuer-wen">Für wen</a>
       <a href="mailto:github@jobst-berlin.de">Kontakt</a>
@@ -235,6 +262,29 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="comparison" id="abgrenzung">
+    <p class="section-label">Abgrenzung</p>
+    <h2>Mehr als ein Review-Agent</h2>
+    <table>
+      <thead>
+        <tr><th>Fähigkeit</th><th>Reines MR-Review</th><th>Workbench</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Prüft den Diff gegen Regeln</td><td data-label="Reines MR-Review">Ja, je nach System</td><td data-label="Workbench">Ja</td></tr>
+        <tr><td>Prüft den gesamten Entwicklungsablauf</td><td data-label="Reines MR-Review">Nicht notwendigerweise</td><td data-label="Workbench">Plan bis Abnahme und Schranke</td></tr>
+        <tr><td>Bindet Freigabe an einen konkreten Planstand</td><td data-label="Reines MR-Review">Nicht notwendigerweise</td><td data-label="Workbench">Ja</td></tr>
+        <tr><td>Behandelt Agentenzustand als nicht vertrauenswürdig</td><td data-label="Reines MR-Review">Nicht notwendigerweise</td><td data-label="Workbench">Explizites Architekturprinzip</td></tr>
+        <tr><td>Prüft Akzeptanzkriterien gegen den tatsächlichen Code</td><td data-label="Reines MR-Review">Nicht notwendigerweise</td><td data-label="Workbench">Eigener Abnahmeschritt</td></tr>
+        <tr><td>Bewertet unabhängig in der Pipeline neu</td><td data-label="Reines MR-Review">Abhängig von der Integration</td><td data-label="Workbench">Bestandteil des Konzepts</td></tr>
+        <tr><td>Hält Host-Credentials vom Agenten fern</td><td data-label="Reines MR-Review">Abhängig von der Architektur</td><td data-label="Workbench">Über den Broker-Modus</td></tr>
+      </tbody>
+    </table>
+    <p class="comparison-note">
+      „Ein Review-Agent bewertet eine Änderung. Workbench kontrolliert, unter welchen Bedingungen eine
+      Änderung entstehen, geprüft, freigegeben und gemerged werden darf."
+    </p>
   </section>
 
   <section class="principle" id="prinzip">

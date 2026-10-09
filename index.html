@@ -220,6 +220,7 @@
       <a href="#angriffe">Angriffe</a>
       <a href="#prinzip">Prinzip</a>
       <a href="#fuer-wen">Für wen</a>
+      <a href="#nutzen">Nutzen</a>
       <a href="#integration">Integration</a>
       <a href="#demo">Demo</a>
       <a href="mailto:github@jobst-berlin.de">Kontakt</a>
@@ -330,7 +331,7 @@
   <section class="diagram" id="architektur">
     <p class="section-label">Architektur</p>
     <h2>Vertrauensgrenzen</h2>
-    <svg viewBox="0 0 740 300" role="img" aria-labelledby="diagram-title diagram-desc" class="arch-svg">
+    <svg viewBox="0 0 760 380" role="img" aria-labelledby="diagram-title diagram-desc" class="arch-svg">
       <title id="diagram-title">Vertrauensgrenzen in Workbench</title>
       <desc id="diagram-desc">
         Der Agent sendet im Broker-Modus nur definierte Operationen an den Broker, keine
@@ -339,46 +340,48 @@
         aus. Erst wenn Freigabe und Pipeline-Prüfung beide erfüllt sind, öffnet die Schranke.
       </desc>
       <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" fill="#111111"></path>
         </marker>
       </defs>
 
-      <!-- Vertrauensgrenze um den Agenten -->
-      <rect x="10" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5" stroke-dasharray="4 3"></rect>
-      <text x="85" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Agent</text>
-      <text x="85" y="58" text-anchor="middle" font-size="10" fill="#666666">nicht vertrauenswürdig</text>
+      <!-- Reihe 1: Agent -> Broker -> Git-Dienst -->
+      <rect x="20" y="20" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5" stroke-dasharray="4 3"></rect>
+      <text x="100" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Agent</text>
+      <text x="100" y="68" text-anchor="middle" font-size="10" fill="#666666">nicht vertrauenswürdig</text>
 
-      <rect x="250" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
-      <text x="325" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Broker</text>
-      <text x="325" y="58" text-anchor="middle" font-size="10" fill="#666666">hält Zugangsdaten</text>
+      <rect x="300" y="20" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="380" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Broker</text>
+      <text x="380" y="68" text-anchor="middle" font-size="10" fill="#666666">hält Zugangsdaten</text>
 
-      <rect x="490" y="10" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
-      <text x="565" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Git-Dienst</text>
-      <text x="565" y="58" text-anchor="middle" font-size="10" fill="#666666">Repo, MR, Zustand</text>
+      <rect x="580" y="20" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="660" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Git-Dienst</text>
+      <text x="660" y="68" text-anchor="middle" font-size="10" fill="#666666">Repo, MR, Zustand</text>
 
-      <line x1="160" y1="45" x2="248" y2="45" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
-      <text x="204" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Operationen, keine Zugangsdaten</text>
+      <line x1="180" y1="55" x2="298" y2="55" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="239" y="44" text-anchor="middle" font-size="10" fill="#666666">Operationen</text>
 
-      <line x1="400" y1="45" x2="488" y2="45" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
-      <text x="444" y="35" text-anchor="middle" font-size="9.5" fill="#666666">Zugangsdaten</text>
+      <line x1="460" y1="55" x2="578" y2="55" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="519" y="44" text-anchor="middle" font-size="10" fill="#666666">Zugangsdaten</text>
 
-      <rect x="10" y="150" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
-      <text x="85" y="180" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Mensch</text>
-      <text x="85" y="198" text-anchor="middle" font-size="10" fill="#666666">genehmigt Plan &amp; Code</text>
+      <!-- Reihe 2: Mensch, Pipeline -->
+      <rect x="20" y="180" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="100" y="210" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Mensch</text>
+      <text x="100" y="228" text-anchor="middle" font-size="10" fill="#666666">genehmigt Plan &amp; Code</text>
 
-      <rect x="490" y="150" width="150" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
-      <text x="565" y="180" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Pipeline</text>
-      <text x="565" y="198" text-anchor="middle" font-size="10" fill="#666666">prüft unabhängig neu</text>
+      <rect x="580" y="180" width="160" height="70" rx="6" fill="none" stroke="#111111" stroke-width="1.5"></rect>
+      <text x="660" y="210" text-anchor="middle" font-size="14" font-weight="600" fill="#111111">Pipeline</text>
+      <text x="660" y="228" text-anchor="middle" font-size="10" fill="#666666">prüft unabhängig neu</text>
 
-      <line x1="565" y1="80" x2="565" y2="148" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
-      <text x="632" y="118" text-anchor="middle" font-size="9.5" fill="#666666">liest Stand</text>
+      <line x1="660" y1="90" x2="660" y2="178" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <text x="693" y="138" text-anchor="middle" font-size="10" fill="#666666">liest</text>
 
-      <rect x="265" y="245" width="210" height="45" rx="6" fill="#111111"></rect>
-      <text x="370" y="272" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Schranke</text>
+      <!-- Beide münden rechtwinklig in die Schranke -->
+      <rect x="290" y="310" width="180" height="48" rx="6" fill="#111111"></rect>
+      <text x="380" y="339" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Schranke</text>
 
-      <line x1="85" y1="220" x2="300" y2="248" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
-      <line x1="565" y1="220" x2="450" y2="248" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></line>
+      <path d="M100,250 L100,334 L288,334" fill="none" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></path>
+      <path d="M660,250 L660,334 L472,334" fill="none" stroke="#111111" stroke-width="1.5" marker-end="url(#arrow)"></path>
     </svg>
     <p class="diagram-caption">
       Der Agent erreicht den Git-Dienst im Broker-Modus nie direkt. Die Schranke öffnet erst, wenn
@@ -422,6 +425,33 @@
       Modell oder welcher Anbieter den Agenten antreibt.
     </p>
     <span class="tag">agentenagnostisch</span>
+  </section>
+
+  <section class="roles" id="nutzen">
+    <p class="section-label">Nutzen nach Rolle</p>
+    <h2>Für jede Rolle ein anderer Grund</h2>
+    <div class="attack-grid">
+      <div class="attack-card">
+        <h3>Entwickler:in</h3>
+        <p>Der Agent arbeitet weitgehend eigenständig; du wirst nur eingebunden, wenn es wirklich zählt – bei der Planfreigabe und am Ende beim Freigabeschritt. Kein ständiges Mitlesen jedes Zwischenschritts nötig.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Entwicklungsleitung</h3>
+        <p>Weniger Rückfragen und Korrekturschleifen, weil Regeln schon in der Planung gelten. Jeder Befund ist nachvollziehbar (Modell, Aufwand, Herkunft), keine undurchsichtige Bewertung.</p>
+      </div>
+      <div class="attack-card">
+        <h3>IT-Sicherheit</h3>
+        <p>Host-Zugangsdaten bleiben im Broker-Modus außerhalb des Agenten. Das Review-Ziel "Sicherheit" läuft immer und lässt sich nicht abschalten. Jede Freigabe ist an einen konkret geprüften Stand gebunden, nicht an eine Behauptung.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Plattformteam</h3>
+        <p>Projektspezifisch erweiterbares Regelwerk, ohne eine eigene Kopie des gesamten Plugins pflegen zu müssen. Läuft auf GitLab und GitHub. Konfiguration lebt im Repo selbst, nicht in externer Infrastruktur.</p>
+      </div>
+      <div class="attack-card">
+        <h3>Unternehmensleitung</h3>
+        <p>Agenten arbeiten produktiv, ohne dass Freigabeprozesse aufgeweicht werden. Nachvollziehbare Spur durch Herkunft und Ticket-Bindung. Keine Abhängigkeit von einem einzelnen Modellanbieter.</p>
+      </div>
+    </div>
   </section>
 
   <section class="status" id="integration">

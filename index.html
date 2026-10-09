@@ -544,9 +544,17 @@
   <section class="status" id="integration">
     <p class="section-label">Integrationsstatus</p>
     <h2>Was heute schon läuft</h2>
+    <p>
+      Das Vertrauensmodell ist agentenagnostisch. Jeder Agent, der einen Merge Request über den
+      normalen Git-Ablauf öffnet, lässt sich an die Schranke binden. Verfügbar ist die Integration
+      heute für Claude Code.
+    </p>
     <ul class="status-list">
       <li><strong>GitLab-CI.</strong> Aktiv erprobt, die eigene Produktivpipeline von Workbench läuft darüber.</li>
-      <li><strong>GitHub Actions.</strong> Referenzvorlage vorhanden, aktuell weniger intensiv in Produktion erprobt.</li>
+      <li><strong>GitHub Actions.</strong> Referenzvorlage vorhanden. <code>prepare</code> und alle
+        Reviewer liefen mit echtem Modell in echtem GitHub Actions korrekt durch. Der volle Durchlauf
+        von <code>evaluate</code>/<code>gate</code> bis zum tatsächlichen Blockieren eines Merges über
+        die Branch-Protection ist noch offen.</li>
       <li><strong>Regelwerk.</strong> Projektspezifisch erweiterbar, eigene Review-Ziele und Freigaberegeln kommen einfach dazu, bestehende lassen sich ersetzen oder abschalten.</li>
       <li><strong>Prüfer-Modell und -Aufwand.</strong> Projektseitig einstellbar.</li>
     </ul>

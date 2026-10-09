@@ -542,9 +542,16 @@
   <section class="status" id="integration">
     <p class="section-label">Integration status</p>
     <h2>What already runs today</h2>
+    <p>
+      The trust model is agent-agnostic. Any agent that opens a merge request through the normal git
+      flow can be gated the same way. The available integration today is Claude Code.
+    </p>
     <ul class="status-list">
       <li><strong>GitLab CI.</strong> Actively used in production, Workbench's own pipeline runs on it.</li>
-      <li><strong>GitHub Actions.</strong> Reference template exists, currently tested less heavily in production.</li>
+      <li><strong>GitHub Actions.</strong> Reference template exists. <code>prepare</code> and all
+        reviewers ran correctly with a real model in real GitHub Actions. The full run from
+        <code>evaluate</code>/<code>gate</code> through to actually blocking a merge via branch
+        protection is still open.</li>
       <li><strong>Rule set.</strong> Extensible per project, custom review targets and approval rules come in cleanly, existing ones can be replaced or turned off.</li>
       <li><strong>Reviewer model and effort.</strong> Configurable per project.</li>
     </ul>

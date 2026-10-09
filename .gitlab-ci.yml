@@ -1,0 +1,17 @@
+# Primäres Repo ist GitLab (privat); spiegelt main nach dem öffentlichen GitHub-Repo
+# HenryJobst/workbench-website, das die Seite über GitHub Pages ausliefert.
+#
+# CI/CD-Variable im Projekt (Einstellungen -> CI/CD -> Variablen, maskiert):
+#   GH_WEBSITE_MIRROR_TOKEN   Fine-grained GitHub-PAT, nur für dieses eine Repo,
+#                             Contents: Read and write.
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+mirror-to-github:
+  stage: deploy
+  image: node:22-bookworm
+  script:
+    - apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
+    - git push "https://gitlab-ci-token-unused:${GH_WEBSITE_MIRROR_TOKEN}@github.com/HenryJobst/workbench-website.git" "HEAD:main"

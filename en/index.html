@@ -643,10 +643,10 @@
         <summary>Where does the agent's work actually run, on my machine or somewhere else?</summary>
         <p>
           Wherever you run the runner: your own machine, your own CI, or a self-hosted GitLab or GitHub
-          runner. Workbench does not run a hosted service that executes your code. The default access
-          mode gives the agent its own git host token. Broker mode, where the agent itself never holds
-          credentials and a separate broker process talks to the git host instead, exists for both
-          GitHub and GitLab, but it is opt-in. You set it yourself with <code>zugang = "broker"</code>.
+          runner. Workbench does not run a hosted service that executes your code. By default, the agent
+          itself never holds credentials to the git host. A separate broker process talks to the git
+          host instead, for both GitHub and GitLab. If you want the agent to
+          hold its own git host token, you can set that explicitly with <code>zugang = "direkt"</code>.
         </p>
       </details>
       <details class="faq-item">

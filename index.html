@@ -649,10 +649,10 @@
         <p>
           Dort, wo du den Runner betreibst: auf dem eigenen Rechner, in der eigenen CI oder auf einem
           selbst betriebenen GitLab- oder GitHub-Runner. Workbench betreibt keinen gehosteten Dienst,
-          der den Code ausführt. Der Standardzugang gibt dem Agenten ein eigenes Token zum Git-Dienst.
-          Den Broker-Modus, bei dem der Agent selbst nie Zugangsdaten hält und stattdessen ein eigener
-          Broker-Prozess mit dem Git-Dienst spricht, gibt es für GitHub und GitLab, aber er ist optional.
-          Du setzt ihn selbst mit <code>zugang = "broker"</code>.
+          der den Code ausführt. Im Standardzugang hält der Agent selbst nie Zugangsdaten zum Git-Dienst,
+          ein eigener Broker-Prozess spricht stattdessen mit dem Git-Dienst. Diesen Broker-Modus gibt es
+          für GitHub und GitLab. Wer dem Agenten bewusst ein eigenes Token geben will, kann das mit
+          <code>zugang = "direkt"</code> explizit einstellen.
         </p>
       </details>
       <details class="faq-item">

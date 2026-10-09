@@ -14,4 +14,6 @@ mirror-to-github:
   image: node:22-bookworm
   script:
     - apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
-    - git push "https://gitlab-ci-token-unused:${GH_WEBSITE_MIRROR_TOKEN}@github.com/HenryJobst/workbench-website.git" "HEAD:main"
+    # Vollqualifizierte Ziel-Ref nötig: Beim allerersten Push ist das GitHub-Repo komplett leer, git kann
+    # "main" ohne "refs/heads/"-Präfix nicht zuordnen, da es dort noch keinen passenden Ref gibt.
+    - git push "https://gitlab-ci-token-unused:${GH_WEBSITE_MIRROR_TOKEN}@github.com/HenryJobst/workbench-website.git" "HEAD:refs/heads/main"

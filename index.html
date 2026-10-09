@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Workbench — Deterministische Schranken für KI-Coding-Agenten</title>
-<meta name="description" content="Workbench erzwingt Plan, Review, Abnahme und eine verbindliche Schranke vor dem Merge für KI-Coding-Agenten – über prüfbare, deterministische Regeln statt reinem Prompt-Vertrauen.">
+<meta name="description" content="Workbench erzwingt Plan, Review, Abnahme und eine verbindliche Schranke vor dem Merge für KI-Coding-Agenten, mit prüfbaren, deterministischen Regeln statt reinem Prompt-Vertrauen.">
 <style>
   :root {
     --bg: #ffffff;
@@ -267,14 +267,14 @@
         <div class="num">02</div>
         <div class="body">
           <h3>Implementierung</h3>
-          <p>Der Agent arbeitet im Feature-Branch. Der Zustand des Laufs wird dort geführt – nicht im Agenten selbst, der sich jederzeit neu starten kann.</p>
+          <p>Der Agent arbeitet im Feature-Branch. Der Zustand des Laufs wird dort geführt, nicht im Agenten selbst, der sich jederzeit neu starten kann.</p>
         </div>
       </div>
       <div class="step">
         <div class="num">03</div>
         <div class="body">
           <h3>Review</h3>
-          <p>Ein automatisiertes, regelbasiertes Review prüft Architektur, Sicherheit, Testqualität und mehr – mit nachvollziehbarer Herkunft jedes Befunds.</p>
+          <p>Ein automatisiertes, regelbasiertes Review prüft Architektur, Sicherheit, Testqualität und mehr. Jeder Befund hat eine nachvollziehbare Herkunft.</p>
         </div>
       </div>
       <div class="step">
@@ -322,7 +322,7 @@
     <blockquote>„Zustand kann die Pflicht nur erhöhen."</blockquote>
     <p>
       Jeder vom Agenten selbst gemeldete oder beeinflusste Zustand darf eine Anforderung niemals
-      abschwächen – nur verschärfen. Ein Agent kann sich keine Freigabe erschleichen, indem er behauptet,
+      abschwächen, nur verschärfen. Ein Agent kann sich keine Freigabe erschleichen, indem er behauptet,
       etwas sei schon erledigt oder geprüft. Das ist die Vertrauensgrenze, auf der alles andere in
       Workbench aufbaut.
     </p>
@@ -396,29 +396,29 @@
       <div class="attack-card">
         <h3>Manipulierter Status oder gefälschte Evidenz</h3>
         <p>Der Agent behauptet, ein Kriterium sei erfüllt oder eine Prüfung sei erfolgt.</p>
-        <p class="counter"><strong>Workbench:</strong> Die Pipeline wertet maßgebliche Bedingungen unabhängig aus; der Agentenzustand kann erforderliche Kontrollen nicht abschwächen.</p>
+        <p class="counter"><strong>Workbench.</strong> Die Pipeline wertet maßgebliche Bedingungen unabhängig aus; der Agentenzustand kann erforderliche Kontrollen nicht abschwächen.</p>
       </div>
       <div class="attack-card">
         <h3>Plan nach der Freigabe geändert</h3>
         <p>Ein bereits genehmigter Plan passt nicht mehr zum aktuellen Inhalt.</p>
-        <p class="counter"><strong>Workbench:</strong> Die Planfreigabe ist an den bestätigten Planstand gebunden; eine Änderung macht die alte Freigabe ungültig.</p>
+        <p class="counter"><strong>Workbench.</strong> Die Planfreigabe ist an den bestätigten Planstand gebunden; eine Änderung macht die alte Freigabe ungültig.</p>
       </div>
       <div class="attack-card">
         <h3>Agent kompromittiert oder durch Prompt Injection beeinflusst</h3>
         <p>Der Agent versucht, über seine eigentliche Aufgabe hinaus auf privilegierte Aktionen zuzugreifen.</p>
-        <p class="counter"><strong>Workbench:</strong> Im Broker-Modus vermittelt der Runner definierte Operationen, statt Zugangsdaten zum Git-Dienst direkt an den Agenten zu übergeben.</p>
+        <p class="counter"><strong>Workbench.</strong> Im Broker-Modus vermittelt der Runner definierte Operationen, statt Zugangsdaten zum Git-Dienst direkt an den Agenten zu übergeben.</p>
       </div>
       <div class="attack-card">
         <h3>Akzeptanzkriterium nur auf dem Papier erfüllt</h3>
         <p>Ein Plan ordnet einem Kriterium eine Lösung zu, die tatsächliche Implementierung erfüllt es aber nicht.</p>
-        <p class="counter"><strong>Workbench:</strong> Die Abnahme prüft das Kriterium gegen den tatsächlichen Stand, nicht allein gegen die Zuordnung im Plan.</p>
+        <p class="counter"><strong>Workbench.</strong> Die Abnahme prüft das Kriterium gegen den tatsächlichen Stand, nicht allein gegen die Zuordnung im Plan.</p>
       </div>
     </div>
   </section>
 
   <section class="audience" id="fuer-wen">
     <p class="section-label">Für wen</p>
-    <h2>Teams, die Agenten produktiv einsetzen – ohne blindes Vertrauen</h2>
+    <h2>Teams, die Agenten produktiv einsetzen, ohne blindes Vertrauen</h2>
     <p>
       Workbench ist für Teams, die KI-Coding-Agenten echte Aufgaben übernehmen lassen, aber nicht nur
       auf deren Einhaltung von Anweisungen vertrauen wollen. Die Schranken gelten unabhängig davon, welches
@@ -433,7 +433,7 @@
     <div class="attack-grid">
       <div class="attack-card">
         <h3>Entwickler:in</h3>
-        <p>Der Agent arbeitet weitgehend eigenständig; du wirst nur eingebunden, wenn es wirklich zählt – bei der Planfreigabe und am Ende beim Freigabeschritt. Kein ständiges Mitlesen jedes Zwischenschritts nötig.</p>
+        <p>Der Agent arbeitet weitgehend eigenständig; du wirst nur eingebunden, wenn es wirklich zählt, bei der Planfreigabe und am Ende beim Freigabeschritt. Kein ständiges Mitlesen jedes Zwischenschritts nötig.</p>
       </div>
       <div class="attack-card">
         <h3>Entwicklungsleitung</h3>
@@ -458,10 +458,10 @@
     <p class="section-label">Integrationsstatus</p>
     <h2>Was heute schon läuft</h2>
     <ul class="status-list">
-      <li><strong>GitLab-CI</strong> — aktiv erprobt: die eigene Produktivpipeline von Workbench läuft darüber.</li>
-      <li><strong>GitHub Actions</strong> — Referenzvorlage vorhanden, aktuell weniger intensiv in Produktion erprobt.</li>
-      <li><strong>Regelwerk</strong> — projektspezifisch erweiterbar: eigene Review-Ziele und Freigaberegeln kommen einfach dazu, bestehende lassen sich ersetzen oder abschalten.</li>
-      <li><strong>Prüfer-Modell und -Aufwand</strong> — projektseitig einstellbar.</li>
+      <li><strong>GitLab-CI.</strong> Aktiv erprobt, die eigene Produktivpipeline von Workbench läuft darüber.</li>
+      <li><strong>GitHub Actions.</strong> Referenzvorlage vorhanden, aktuell weniger intensiv in Produktion erprobt.</li>
+      <li><strong>Regelwerk.</strong> Projektspezifisch erweiterbar, eigene Review-Ziele und Freigaberegeln kommen einfach dazu, bestehende lassen sich ersetzen oder abschalten.</li>
+      <li><strong>Prüfer-Modell und -Aufwand.</strong> Projektseitig einstellbar.</li>
     </ul>
   </section>
 
@@ -470,7 +470,7 @@
     <h2>Was du in der Demo siehst</h2>
     <p>
       Ein echter Durchlauf an einem realen Ticket: ein genehmigter Plan, die Implementierung im
-      Feature-Branch, ein Review-Lauf mit einem blockierenden Befund – und die anschließende,
+      Feature-Branch, ein Review-Lauf mit einem blockierenden Befund und die anschließende,
       erfolgreiche Freigabe, sobald alle Pflichten erfüllt sind.
     </p>
     <div class="cta-row">

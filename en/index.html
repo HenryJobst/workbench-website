@@ -214,9 +214,17 @@
     .attack-grid { grid-template-columns: 1fr; }
   }
 
-  .workflow-diagramm { width: 100%; min-height: 24rem; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem; }
-  .workflow-diagramm-steuerung { display: flex; gap: 0.75rem; margin: 1rem 0; flex-wrap: wrap; }
-  .workflow-diagramm-erzaehltext { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin: 0 0 1rem; min-height: 1.2em; }
+  .steps { display: flex; flex-direction: column; gap: 1.75rem; }
+  .step { display: flex; gap: 1.25rem; }
+  .step .num {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex: 0 0 2.25rem;
+    padding-top: 0.15rem;
+  }
+  .step .body h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .step .body p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
   .principle blockquote {
     margin: 0 0 1.25rem;
@@ -308,16 +316,44 @@
 
   <section id="lifecycle">
     <p class="section-label">The lifecycle</p>
-    <h2>A complete run, with every requirement</h2>
-    <div id="workflow-diagramm-canvas" class="workflow-diagramm"></div>
-    <p class="diagram-caption">
-      Start, requirements analysis, planning, plan check, plan approval (if required),
-      implementation, tests with a fix loop, review, acceptance, approval rules for the diff,
-      merge request, code approval (if required), an independent pipeline check, and the gate,
-      which opens only once both approval and the pipeline check are in place. Retries from the
-      plan check, tests, review, and acceptance go back to planning or implementation; an
-      exhausted retry counter leads to an escalation that a human decides.
-    </p>
+    <h2>Five steps, each with its own requirement</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <div class="body">
+          <h3>Plan</h3>
+          <p>The agent writes a plan. A human approves it before any code exists.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <div class="body">
+          <h3>Implementation</h3>
+          <p>The agent works on a feature branch. The run's state lives there, not in the agent itself, which can restart at any time.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <div class="body">
+          <h3>Review</h3>
+          <p>An automated, rule-based review checks architecture, security, test quality, and more. Every finding has a traceable origin.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <div class="body">
+          <h3>Acceptance</h3>
+          <p>The criteria recorded in the ticket are checked against the actual state, not against a claim.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">05</div>
+        <div class="body">
+          <h3>Gate</h3>
+          <p>Nothing merges until every requirement is met. No exception the agent can grant itself.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="comparison" id="comparison">
@@ -656,16 +692,6 @@
   <span>MergeWarden © 2026</span>
   <a href="mailto:github@jobst-berlin.de">github@jobst-berlin.de</a>
 </footer>
-
-<script type="module">
-  import { initWorkflowDiagramm } from "../js/workflow-diagramm.js";
-  const workflowDiagrammContainer = document.getElementById("workflow-diagramm-canvas");
-  if (workflowDiagrammContainer) {
-    initWorkflowDiagramm(workflowDiagrammContainer).catch((fehler) => {
-      console.error("Workflow diagram could not be loaded:", fehler);
-    });
-  }
-</script>
 
 </body>
 </html>

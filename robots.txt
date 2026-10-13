@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://henryjobst.github.io/workbench-website/sitemap.xml
+Sitemap: https://mergewarden.de/sitemap.xml

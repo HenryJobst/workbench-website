@@ -3,38 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workbench — Deterministic gates for AI coding agents</title>
-<meta name="description" content="Workbench enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.">
-<link rel="canonical" href="https://henryjobst.github.io/workbench-website/en/">
-<link rel="alternate" hreflang="de" href="https://henryjobst.github.io/workbench-website/">
-<link rel="alternate" hreflang="en" href="https://henryjobst.github.io/workbench-website/en/">
-<link rel="alternate" hreflang="x-default" href="https://henryjobst.github.io/workbench-website/">
+<title>MergeWarden — Deterministic gates for AI coding agents</title>
+<meta name="description" content="MergeWarden enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.">
+<link rel="canonical" href="https://mergewarden.de/en/">
+<link rel="alternate" hreflang="de" href="https://mergewarden.de/">
+<link rel="alternate" hreflang="en" href="https://mergewarden.de/en/">
+<link rel="alternate" hreflang="x-default" href="https://mergewarden.de/">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Workbench">
+<meta property="og:site_name" content="MergeWarden">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="de_DE">
-<meta property="og:url" content="https://henryjobst.github.io/workbench-website/en/">
-<meta property="og:title" content="Workbench — Deterministic gates for AI coding agents">
-<meta property="og:description" content="Workbench enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.">
-<meta property="og:image" content="https://henryjobst.github.io/workbench-website/og-image-en.png">
+<meta property="og:url" content="https://mergewarden.de/en/">
+<meta property="og:title" content="MergeWarden — Deterministic gates for AI coding agents">
+<meta property="og:description" content="MergeWarden enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.">
+<meta property="og:image" content="https://mergewarden.de/og-image-en.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Workbench — Deterministic gates for AI coding agents">
-<meta name="twitter:description" content="Workbench enforces plan, review, acceptance, and a binding gate before merge for AI coding agents.">
-<meta name="twitter:image" content="https://henryjobst.github.io/workbench-website/og-image-en.png">
+<meta name="twitter:title" content="MergeWarden — Deterministic gates for AI coding agents">
+<meta name="twitter:description" content="MergeWarden enforces plan, review, acceptance, and a binding gate before merge for AI coding agents.">
+<meta name="twitter:image" content="https://mergewarden.de/og-image-en.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Workbench",
+  "name": "MergeWarden",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "GitLab CI, GitHub Actions, local agent",
-  "description": "Workbench enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.",
-  "url": "https://henryjobst.github.io/workbench-website/en/",
+  "description": "MergeWarden enforces plan, review, acceptance, and a binding gate before merge for AI coding agents, with checkable, deterministic rules instead of plain prompt trust.",
+  "url": "https://mergewarden.de/en/",
   "offers": [
     { "@type": "Offer", "name": "OSS", "price": "0", "priceCurrency": "EUR" },
     { "@type": "Offer", "name": "Single" },
@@ -272,7 +272,7 @@
 
 <nav>
   <div class="inner">
-    <a class="brand" href="#top">Workbench</a>
+    <a class="brand" href="#top">MergeWarden</a>
     <div class="links">
       <a href="#lifecycle">Lifecycle</a>
       <a href="#comparison">Comparison</a>
@@ -296,7 +296,7 @@
   <section class="hero" id="top">
     <h1>Autonomous coding agents.<br>Controlled permissions.<br>Checkable approvals.</h1>
     <p class="lead">
-      Workbench turns a coding agent into a controlled development process: an approved plan,
+      MergeWarden turns a coding agent into a controlled development process: an approved plan,
       independent review, criteria-bound acceptance, and a binding gate before merge.
     </p>
     <p class="lead">
@@ -309,7 +309,7 @@
       <li>Pipeline re-checks independently</li>
     </ul>
     <div class="cta-row">
-      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Demo">Request a technical demo</a>
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=MergeWarden%20Demo">Request a technical demo</a>
       <a class="cta secondary" href="#lifecycle">How it works</a>
     </div>
   </section>
@@ -361,20 +361,20 @@
     <h2>More than a review agent</h2>
     <table>
       <thead>
-        <tr><th>Capability</th><th>Plain MR review</th><th>Workbench</th></tr>
+        <tr><th>Capability</th><th>Plain MR review</th><th>MergeWarden</th></tr>
       </thead>
       <tbody>
-        <tr><td>Checks the diff against rules</td><td data-label="Plain MR review">Yes, depending on the system</td><td data-label="Workbench">Yes</td></tr>
-        <tr><td>Checks the whole development process</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Plan through acceptance and gate</td></tr>
-        <tr><td>Ties approval to a specific plan state</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Yes</td></tr>
-        <tr><td>Treats agent-reported state as untrusted</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Explicit architectural principle</td></tr>
-        <tr><td>Checks acceptance criteria against the actual code</td><td data-label="Plain MR review">Not necessarily</td><td data-label="Workbench">Its own acceptance step</td></tr>
-        <tr><td>Re-evaluates independently in the pipeline</td><td data-label="Plain MR review">Depends on the integration</td><td data-label="Workbench">Part of the design</td></tr>
-        <tr><td>Keeps git host credentials away from the agent</td><td data-label="Plain MR review">Depends on the architecture</td><td data-label="Workbench">Via broker mode</td></tr>
+        <tr><td>Checks the diff against rules</td><td data-label="Plain MR review">Yes, depending on the system</td><td data-label="MergeWarden">Yes</td></tr>
+        <tr><td>Checks the whole development process</td><td data-label="Plain MR review">Not necessarily</td><td data-label="MergeWarden">Plan through acceptance and gate</td></tr>
+        <tr><td>Ties approval to a specific plan state</td><td data-label="Plain MR review">Not necessarily</td><td data-label="MergeWarden">Yes</td></tr>
+        <tr><td>Treats agent-reported state as untrusted</td><td data-label="Plain MR review">Not necessarily</td><td data-label="MergeWarden">Explicit architectural principle</td></tr>
+        <tr><td>Checks acceptance criteria against the actual code</td><td data-label="Plain MR review">Not necessarily</td><td data-label="MergeWarden">Its own acceptance step</td></tr>
+        <tr><td>Re-evaluates independently in the pipeline</td><td data-label="Plain MR review">Depends on the integration</td><td data-label="MergeWarden">Part of the design</td></tr>
+        <tr><td>Keeps git host credentials away from the agent</td><td data-label="Plain MR review">Depends on the architecture</td><td data-label="MergeWarden">Via broker mode</td></tr>
       </tbody>
     </table>
     <p class="comparison-note">
-      "A review agent judges a change. Workbench controls the conditions under which a change may come
+      "A review agent judges a change. MergeWarden controls the conditions under which a change may come
       into existence, get reviewed, get approved, and get merged."
     </p>
   </section>
@@ -408,7 +408,7 @@
     <p class="section-label">Architecture</p>
     <h2>Trust boundaries</h2>
     <svg viewBox="0 0 760 380" role="img" aria-labelledby="diagram-title diagram-desc" class="arch-svg">
-      <title id="diagram-title">Trust boundaries in Workbench</title>
+      <title id="diagram-title">Trust boundaries in MergeWarden</title>
       <desc id="diagram-desc">
         In broker mode, the agent sends only defined operations to the broker, no git host credentials.
         The broker holds the credentials and talks to the git host. A human approves plan and code. The
@@ -472,32 +472,32 @@
       <div class="attack-card">
         <h3>Manipulated status or fabricated evidence</h3>
         <p>The agent claims a criterion is met or a check has passed.</p>
-        <p class="counter"><strong>Workbench.</strong> The pipeline evaluates the governing conditions independently; agent-reported state cannot weaken a required control.</p>
+        <p class="counter"><strong>MergeWarden.</strong> The pipeline evaluates the governing conditions independently; agent-reported state cannot weaken a required control.</p>
       </div>
       <div class="attack-card">
         <h3>Plan changed after approval</h3>
         <p>An already-approved plan no longer matches the current content.</p>
-        <p class="counter"><strong>Workbench.</strong> Plan approval is tied to the confirmed plan state; any change invalidates the old approval.</p>
+        <p class="counter"><strong>MergeWarden.</strong> Plan approval is tied to the confirmed plan state; any change invalidates the old approval.</p>
       </div>
       <div class="attack-card">
         <h3>Agent compromised or influenced by prompt injection</h3>
         <p>The agent tries to reach privileged actions beyond its actual task.</p>
-        <p class="counter"><strong>Workbench.</strong> In broker mode, the runner mediates defined operations instead of handing git host credentials directly to the agent.</p>
+        <p class="counter"><strong>MergeWarden.</strong> In broker mode, the runner mediates defined operations instead of handing git host credentials directly to the agent.</p>
       </div>
       <div class="attack-card">
         <h3>Acceptance criterion met on paper only</h3>
         <p>A plan maps a criterion to a solution, but the actual implementation does not meet it.</p>
-        <p class="counter"><strong>Workbench.</strong> Acceptance checks the criterion against the actual state, not just against the mapping in the plan.</p>
+        <p class="counter"><strong>MergeWarden.</strong> Acceptance checks the criterion against the actual state, not just against the mapping in the plan.</p>
       </div>
       <div class="attack-card">
         <h3>Manipulated ticket tries to reach credentials or the network</h3>
         <p>A crafted ticket text tries to get the agent to read SSH keys, cloud credentials, or any network target.</p>
-        <p class="counter"><strong>Workbench.</strong> A security profile blocks credential files, denies environment variables by default, and allows only an approved network list. If the sandbox cannot start, the agent does not start.</p>
+        <p class="counter"><strong>MergeWarden.</strong> A security profile blocks credential files, denies environment variables by default, and allows only an approved network list. If the sandbox cannot start, the agent does not start.</p>
       </div>
       <div class="attack-card">
         <h3>Manipulated merge request title or description</h3>
         <p>An attacker tries to steer the automated reviewer through the merge request text.</p>
-        <p class="counter"><strong>Workbench.</strong> Title, branch name, and description are never inserted into scripts. The reviewer has no Bash, WebFetch, or WebSearch, only read access to its input.</p>
+        <p class="counter"><strong>MergeWarden.</strong> Title, branch name, and description are never inserted into scripts. The reviewer has no Bash, WebFetch, or WebSearch, only read access to its input.</p>
       </div>
     </div>
   </section>
@@ -506,7 +506,7 @@
     <p class="section-label">Who it's for</p>
     <h2>Teams running agents in production, without blind trust</h2>
     <p>
-      Workbench is for teams that let AI coding agents take on real work but do not want to just trust
+      MergeWarden is for teams that let AI coding agents take on real work but do not want to just trust
       them to follow instructions. The gates apply no matter which model or vendor drives the agent.
     </p>
     <span class="tag">model-agnostic</span>
@@ -547,7 +547,7 @@
       flow can be gated the same way. The available integration today is Claude Code.
     </p>
     <ul class="status-list">
-      <li><strong>GitLab CI.</strong> Actively used in production, Workbench's own pipeline runs on it.</li>
+      <li><strong>GitLab CI.</strong> Actively used in production, MergeWarden's own pipeline runs on it.</li>
       <li><strong>GitHub Actions.</strong> Reference template exists. <code>prepare</code> and all
         reviewers ran correctly with a real model in real GitHub Actions. The full run from
         <code>evaluate</code>/<code>gate</code> through to actually blocking a merge via branch
@@ -613,11 +613,11 @@
     <p class="comparison-note">
       OSS applies to one public repository under a recognized open-source license. Term for the other
       tiers: 12 months, auto-renewing with a notice period. The customer covers model costs through
-      their own API access; Workbench sells the control layer, not compute time. A pilot run from ticket
+      their own API access; MergeWarden sells the control layer, not compute time. A pilot run from ticket
       to merge request is recommended before signing, see Demo below.
     </p>
     <div class="cta-row">
-      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Pricing">Request pricing</a>
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=MergeWarden%20Pricing">Request pricing</a>
     </div>
   </section>
 
@@ -630,7 +630,7 @@
       takes 45 to 60 minutes, and you don't need to prepare anything, we run the walkthrough.
     </p>
     <div class="cta-row">
-      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=Workbench%20Demo">Request a technical demo</a>
+      <a class="cta primary" href="mailto:github@jobst-berlin.de?subject=MergeWarden%20Demo">Request a technical demo</a>
     </div>
   </section>
 
@@ -641,7 +641,7 @@
       <details class="faq-item">
         <summary>Does this work with the coding agent I already use?</summary>
         <p>
-          Workbench runs as a Claude Code plugin today. The gate, the pipeline checks, and the broker
+          MergeWarden runs as a Claude Code plugin today. The gate, the pipeline checks, and the broker
           mode are not tied to one vendor. Any agent that can open a merge request through the normal
           git flow can be gated the same way. Support for other agent runtimes is a matter of writing
           the integration, not changing the trust model.
@@ -651,7 +651,7 @@
         <summary>Where does the agent's work actually run, on my machine or somewhere else?</summary>
         <p>
           Wherever you run the runner: your own machine, your own CI, or a self-hosted GitLab or GitHub
-          runner. Workbench does not run a hosted service that executes your code. By default, the agent
+          runner. MergeWarden does not run a hosted service that executes your code. By default, the agent
           itself never holds credentials to the git host. A separate broker process talks to the git
           host instead, for both GitHub and GitLab. If you want the agent to
           hold its own git host token, you can set that explicitly with <code>zugang = "direkt"</code>.
@@ -677,7 +677,7 @@
       <details class="faq-item">
         <summary>Is this the same as a review bot or linter?</summary>
         <p>
-          A review bot adds a check. Workbench adds a merge gate. Plan, implementation, review, and
+          A review bot adds a check. MergeWarden adds a merge gate. Plan, implementation, review, and
           acceptance run as a fixed sequence, and the agent's own status reports can only raise what is
           required before merge, never lower it. The six attack cases above show what that boundary
           catches and what it does not.
@@ -689,7 +689,7 @@
 </main>
 
 <footer>
-  <span>Workbench © 2026</span>
+  <span>MergeWarden © 2026</span>
   <a href="mailto:github@jobst-berlin.de">github@jobst-berlin.de</a>
 </footer>
 

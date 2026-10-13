@@ -2,8 +2,8 @@
 <rect width="1200" height="630" fill="#ffffff"/>
 <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#e4e4e4" stroke-width="2"/>
 <rect x="100" y="100" width="64" height="64" rx="10" fill="#111111"/>
-<text x="132" y="143" font-family="SF Mono, JetBrains Mono, Fira Code, Consolas, monospace" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle">W</text>
-<text x="100" y="280" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="72" font-weight="700" fill="#111111">Workbench</text>
+<text x="132" y="143" font-family="SF Mono, JetBrains Mono, Fira Code, Consolas, monospace" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle">M</text>
+<text x="100" y="280" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="72" font-weight="700" fill="#111111">MergeWarden</text>
 <text x="100" y="340" font-family="SF Mono, JetBrains Mono, Fira Code, Consolas, monospace" font-size="28" fill="#666666">Deterministic gates for AI coding agents</text>
 <line x1="100" y1="400" x2="1100" y2="400" stroke="#e4e4e4" stroke-width="2"/>
 <text x="100" y="460" font-family="SF Mono, JetBrains Mono, Fira Code, Consolas, monospace" font-size="24" fill="#111111">Plan → review → acceptance → gate</text>

@@ -314,6 +314,7 @@
     <a class="brand" href="#top">MergeWarden</a>
     <div class="links">
       <a href="#lifecycle">Lifecycle</a>
+      <a href="#example">Example</a>
       <a href="#comparison">Comparison</a>
       <a href="#architecture">Architecture</a>
       <a href="#attacks">Attacks</a>
@@ -389,10 +390,25 @@
         <div class="num">05</div>
         <div class="body">
           <h3>Gate</h3>
-          <p>Nothing merges until every requirement is met. No exception the agent can grant itself.</p>
+          <p>Nothing merges until every requirement is met. No exception the agent can grant itself. Prerequisite: the pipeline check is configured in the repository as a required status check (branch protection) -- that setup deliberately stays in the project's own hands.</p>
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="example" id="example">
+    <p class="section-label">Example</p>
+    <h2>A blocked merge in practice</h2>
+    <p>
+      An agent reports a task as done: implementation finished, tests green. The acceptance check,
+      however, compares the reported acceptance criteria against the actual code -- not against the
+      agent's claim -- and finds that one criterion isn't met. The gate refuses approval, the merge
+      request stays blocked, regardless of what the agent reported beforehand.
+    </p>
+    <p>
+      This flow runs live in MergeWarden's own GitLab pipeline: plan, review, acceptance, and gate
+      all run end to end against a real ticket and a real merge request.
+    </p>
   </section>
 
   <section class="comparison" id="comparison">

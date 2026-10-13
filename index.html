@@ -314,6 +314,7 @@
     <a class="brand" href="#top">MergeWarden</a>
     <div class="links">
       <a href="#lebenszyklus">Lebenszyklus</a>
+      <a href="#beispiel">Beispiel</a>
       <a href="#abgrenzung">Abgrenzung</a>
       <a href="#architektur">Architektur</a>
       <a href="#angriffe">Angriffe</a>
@@ -390,10 +391,26 @@
         <div class="num">05</div>
         <div class="body">
           <h3>Schranke</h3>
-          <p>Gemerged wird erst, wenn jede Pflicht erfüllt ist. Keine Ausnahme, die der Agent sich selbst geben kann.</p>
+          <p>Gemerged wird erst, wenn jede Pflicht erfüllt ist. Keine Ausnahme, die der Agent sich selbst geben kann. Voraussetzung: Die Pipeline-Prüfung ist im Repository als verpflichtender Status-Check hinterlegt (Branch Protection bzw. Required Status Checks) – die Einrichtung bleibt bewusst in der Hand des Projekts.</p>
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="example" id="beispiel">
+    <p class="section-label">Beispiel</p>
+    <h2>Ein blockierter Merge in der Praxis</h2>
+    <p>
+      Ein Agent meldet eine Aufgabe als abgeschlossen: Implementierung fertig, Tests grün. Die
+      Abnahme-Prüfung vergleicht die gemeldeten Abnahmekriterien jedoch gegen den tatsächlichen Code –
+      nicht gegen die Behauptung des Agenten – und stellt fest, dass ein Kriterium nicht erfüllt ist.
+      Das Gate verweigert die Freigabe, der Merge Request bleibt blockiert, unabhängig davon, was der
+      Agent zuvor berichtet hat.
+    </p>
+    <p>
+      Dieser Ablauf ist in MergeWardens eigener GitLab-Pipeline live erprobt: Plan, Review, Abnahme und
+      Gate laufen durchgehend gegen ein echtes Ticket und einen echten Merge Request.
+    </p>
   </section>
 
   <section class="comparison" id="abgrenzung">

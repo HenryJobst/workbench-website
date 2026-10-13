@@ -160,12 +160,29 @@
     margin: 0 0 1.5rem;
   }
   @media (max-width: 560px) {
-    table, thead, tbody, th, td, tr { display: block; }
+    table:not(.table-scroll table), thead, tbody, th, td, tr { display: block; }
     thead { display: none; }
     tr { border-bottom: 1px solid var(--border); padding: 0.75rem 0; }
     tbody tr:last-child { border-bottom: none; }
     td { border-bottom: none; padding: 0.15rem 0; }
     td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
+  }
+  .table-scroll { margin-bottom: 1.5rem; }
+  .table-scroll table { margin-bottom: 0; }
+  /* Die Preistabelle hat 5 Datenspalten: zeilenweises Stapeln (Preis: OSS/Single/Team/...,
+     dann Umfang: OSS/Single/...) reißt die Infos zu jeder Stufe auseinander, horizontales
+     Scrollen ist unschön. Auf schmalen Viewports deshalb eine separate, spaltenweise
+     gruppierte Kartenansicht statt der Tabelle -- Desktop zeigt weiter die echte Tabelle. */
+  .pricing-cards { display: none; }
+  @media (max-width: 560px) {
+    .table-scroll { display: none; }
+    .pricing-cards { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .pricing-card { border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
+    .pricing-card:last-child { border-bottom: none; padding-bottom: 0; }
+    .pricing-card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+    .pricing-card dl { margin: 0; }
+    .pricing-card dt { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0.5rem; }
+    .pricing-card dd { margin: 0; }
   }
 
   .principle-intro { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin: 1.75rem 0 0.75rem; }
@@ -531,6 +548,7 @@
     <p>
       Gestaffelt nach Teamgröße und Anzahl der Repositories, nicht nach Pipeline-Läufen.
     </p>
+    <div class="table-scroll">
     <table>
       <thead>
         <tr><th>&nbsp;</th><th>OSS</th><th>Single</th><th>Team</th><th>Business</th><th>Enterprise</th></tr>
@@ -539,10 +557,10 @@
         <tr>
           <td>Preis</td>
           <td data-label="OSS">kostenlos</td>
-          <td data-label="Single"></td>
-          <td data-label="Team"></td>
-          <td data-label="Business"></td>
-          <td data-label="Enterprise"></td>
+          <td data-label="Single">auf Anfrage</td>
+          <td data-label="Team">auf Anfrage</td>
+          <td data-label="Business">auf Anfrage</td>
+          <td data-label="Enterprise">auf Anfrage</td>
         </tr>
         <tr>
           <td>Umfang</td>
@@ -578,6 +596,59 @@
         </tr>
       </tbody>
     </table>
+    </div>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <h3>OSS</h3>
+        <dl>
+          <dt>Preis</dt><dd>kostenlos</dd>
+          <dt>Umfang</dt><dd>Single-Lizenz pro Projekt</dd>
+          <dt>Repositories</dt><dd>1 öffentliches Open-Source-Projekt</dd>
+          <dt>Git-Dienst</dt><dd>GitHub oder GitLab</dd>
+          <dt>Support</dt><dd>Community</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Single</h3>
+        <dl>
+          <dt>Preis</dt><dd>auf Anfrage</dd>
+          <dt>Umfang</dt><dd>1 Entwickler:in</dd>
+          <dt>Repositories</dt><dd>bis 2</dd>
+          <dt>Git-Dienst</dt><dd>GitHub oder GitLab</dd>
+          <dt>Support</dt><dd>Community</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Team</h3>
+        <dl>
+          <dt>Preis</dt><dd>auf Anfrage</dd>
+          <dt>Umfang</dt><dd>bis 10</dd>
+          <dt>Repositories</dt><dd>bis 5</dd>
+          <dt>Git-Dienst</dt><dd>GitHub oder GitLab</dd>
+          <dt>Support</dt><dd>E-Mail</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Business</h3>
+        <dl>
+          <dt>Preis</dt><dd>auf Anfrage</dd>
+          <dt>Umfang</dt><dd>bis 50</dd>
+          <dt>Repositories</dt><dd>bis 25</dd>
+          <dt>Git-Dienst</dt><dd>beide</dd>
+          <dt>Support</dt><dd>priorisiert</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <dl>
+          <dt>Preis</dt><dd>auf Anfrage</dd>
+          <dt>Umfang</dt><dd>individuell</dd>
+          <dt>Repositories</dt><dd>unbegrenzt</dd>
+          <dt>Git-Dienst</dt><dd>beide</dd>
+          <dt>Support</dt><dd>SLA, Onboarding, Audit</dd>
+        </dl>
+      </div>
+    </div>
     <p class="comparison-note">
       OSS gilt für ein öffentliches Repository unter einer anerkannten Open-Source-Lizenz. Laufzeit der
       übrigen Stufen: 12 Monate, automatische Verlängerung mit Kündigungsfrist. Die Modellkosten trägt

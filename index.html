@@ -214,17 +214,9 @@
     .attack-grid { grid-template-columns: 1fr; }
   }
 
-  .steps { display: flex; flex-direction: column; gap: 1.75rem; }
-  .step { display: flex; gap: 1.25rem; }
-  .step .num {
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    color: var(--muted);
-    flex: 0 0 2.25rem;
-    padding-top: 0.15rem;
-  }
-  .step .body h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
-  .step .body p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  .workflow-diagramm { width: 100%; min-height: 24rem; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem; }
+  .workflow-diagramm-steuerung { display: flex; gap: 0.75rem; margin: 1rem 0; flex-wrap: wrap; }
+  .workflow-diagramm-erzaehltext { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin: 0 0 1rem; min-height: 1.2em; }
 
   .principle blockquote {
     margin: 0 0 1.25rem;
@@ -317,44 +309,17 @@
 
   <section id="lebenszyklus">
     <p class="section-label">Der Lebenszyklus</p>
-    <h2>Fünf Schritte, jeder mit eigener Pflicht</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="num">01</div>
-        <div class="body">
-          <h3>Plan</h3>
-          <p>Der Agent schreibt einen Plan. Ein Mensch gibt ihn frei, bevor Code entsteht.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="num">02</div>
-        <div class="body">
-          <h3>Implementierung</h3>
-          <p>Der Agent arbeitet im Feature-Branch. Der Zustand des Laufs wird dort geführt, nicht im Agenten selbst, der sich jederzeit neu starten kann.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="num">03</div>
-        <div class="body">
-          <h3>Review</h3>
-          <p>Ein automatisiertes, regelbasiertes Review prüft Architektur, Sicherheit, Testqualität und mehr. Jeder Befund hat eine nachvollziehbare Herkunft.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="num">04</div>
-        <div class="body">
-          <h3>Abnahme</h3>
-          <p>Die im Ticket festgehaltenen Kriterien werden gegen den tatsächlichen Stand geprüft, nicht gegen eine Behauptung.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="num">05</div>
-        <div class="body">
-          <h3>Schranke</h3>
-          <p>Gemerged wird erst, wenn jede Pflicht erfüllt ist. Keine Ausnahme, die der Agent sich selbst geben kann.</p>
-        </div>
-      </div>
-    </div>
+    <h2>Ein vollständiger Lauf, mit jeder Pflicht</h2>
+    <div id="workflow-diagramm-canvas" class="workflow-diagramm"></div>
+    <p class="diagram-caption">
+      Start, Anforderungsanalyse, Planung, Plan-Prüfung, Plan-Freigabe (falls nötig),
+      Implementierung, Tests mit Korrekturschleife, Review, Abnahme, Freigaberegeln für den
+      Diff, Merge-Request, Code-Freigabe (falls nötig), eine unabhängige Pipeline-Prüfung und
+      die Schranke, die erst öffnet, wenn Freigabe und Pipeline-Prüfung beide vorliegen.
+      Rücksprünge aus Plan-Prüfung, Tests, Review und Abnahme führen zurück in die Planung
+      oder Implementierung; ein erschöpfter Rücksprungzähler führt in eine Eskalation, die ein
+      Mensch entscheidet.
+    </p>
   </section>
 
   <section class="comparison" id="abgrenzung">

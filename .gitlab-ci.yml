@@ -9,8 +9,18 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
+# Node-eigener Testrunner (keine Abhängigkeiten), prüft u. a. js/workflow-diagramm-script.js
+# gegen die generierten Workflow-Daten. Default-Stage-Reihenfolge (test vor deploy) reicht,
+# keine eigene stages:-Liste nötig.
+test:
+  stage: test
+  image: node:22-bookworm
+  script:
+    - node --test test/
+
 mirror-to-github:
   stage: deploy
+  needs: ["test"]
   image: node:22-bookworm
   script:
     - apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null

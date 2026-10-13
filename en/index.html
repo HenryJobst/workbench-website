@@ -693,5 +693,15 @@
   <a href="mailto:github@jobst-berlin.de">github@jobst-berlin.de</a>
 </footer>
 
+<script type="module">
+  import { initWorkflowDiagramm } from "../js/workflow-diagramm.js";
+  const workflowDiagrammContainer = document.getElementById("workflow-diagramm-canvas");
+  if (workflowDiagrammContainer) {
+    initWorkflowDiagramm(workflowDiagrammContainer).catch((fehler) => {
+      console.error("Workflow diagram could not be loaded:", fehler);
+    });
+  }
+</script>
+
 </body>
 </html>

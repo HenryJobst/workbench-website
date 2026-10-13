@@ -50,8 +50,30 @@
     --fg: #111111;
     --muted: #666666;
     --border: #e4e4e4;
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --cta-primary-hover: #333;
+    --cta-secondary-hover: #f3f3f3;
     --mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121212;
+      --fg: #f2f2f2;
+      --muted: #9a9a9a;
+      --border: #333333;
+      --nav-bg: rgba(18, 18, 18, 0.92);
+      --cta-primary-hover: #dddddd;
+      --cta-secondary-hover: #1e1e1e;
+    }
+    /* Die Architektur- und Trust-Boundary-Grafiken sind reines Inline-SVG mit fest
+       verdrahteten Hex-Werten als Präsentationsattribute (nicht über CSS-Variablen
+       steuerbar). Diese Attribute haben in der CSS-Kaskade die niedrigste Priorität,
+       daher reichen einfache Attribut-Selektoren zum Überschreiben im Dark Mode. */
+    .arch-svg [fill="#111111"] { fill: var(--fg); }
+    .arch-svg [stroke="#111111"] { stroke: var(--fg); }
+    .arch-svg [fill="#666666"] { fill: var(--muted); }
+    .arch-svg text[fill="#ffffff"] { fill: var(--bg); }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -68,7 +90,7 @@
   nav {
     position: sticky;
     top: 0;
-    background: rgba(255,255,255,0.92);
+    background: var(--nav-bg);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--border);
     z-index: 10;
@@ -128,9 +150,9 @@
     font-size: 0.95rem;
   }
   .cta.primary { background: var(--fg); color: var(--bg); }
-  .cta.primary:hover { background: #333; }
+  .cta.primary:hover { background: var(--cta-primary-hover); }
   .cta.secondary { color: var(--fg); }
-  .cta.secondary:hover { background: #f3f3f3; }
+  .cta.secondary:hover { background: var(--cta-secondary-hover); }
 
   .section-label {
     font-family: var(--mono);

@@ -1,0 +1,288 @@
+{
+  "beispiel_lauf": [
+    {
+      "phase": "plan_freigabe",
+      "text": "Der Plan ist genehmigt."
+    },
+    {
+      "phase": "implementierung",
+      "text": "Der Agent arbeitet im Feature-Branch."
+    },
+    {
+      "phase": "review",
+      "text": "Ein Review-Lauf findet einen blockierenden Befund."
+    },
+    {
+      "phase": "planung",
+      "text": "Rücksprung zur Planung, der Plan bleibt im Kern gültig."
+    },
+    {
+      "phase": "implementierung",
+      "text": "Der Agent setzt die Korrektur um."
+    },
+    {
+      "phase": "review",
+      "text": "Der zweite Review-Lauf besteht."
+    },
+    {
+      "phase": "abnahme",
+      "text": "Alle Abnahmekriterien sind erfüllt."
+    },
+    {
+      "phase": "code_freigabe",
+      "text": "Ein Mensch gibt den Code frei, sobald alle Pflichten erfüllt sind."
+    },
+    {
+      "phase": "pipeline_pruefung",
+      "text": "Die Pipeline bestätigt unabhängig denselben Stand."
+    },
+    {
+      "phase": "schranke",
+      "text": "Die Schranke öffnet."
+    }
+  ],
+  "phasen": [
+    {
+      "id": "start",
+      "kurztext": "Branch anlegen, Ticket als ticket.md kopieren, Zustand schreiben, früh pushen.",
+      "titel": "Start",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "anforderungsanalyse"
+        }
+      ]
+    },
+    {
+      "id": "anforderungsanalyse",
+      "kurztext": "Der Agent leitet überprüfbare Abnahmekriterien ab. Ist das Ticket zu vage, pausiert der Lauf mit höchstens fünf Rückfragen im Ticket.",
+      "titel": "Anforderungsanalyse",
+      "typ": "pause",
+      "uebergaenge": [
+        {
+          "label": "Kriterien abgeleitet",
+          "ziel": "planung"
+        }
+      ]
+    },
+    {
+      "id": "planung",
+      "kurztext": "Der Agent sieht sich das Repo an, liest das Ticket und schreibt den Plan (Ziel, Schritte, betroffene Stellen).",
+      "titel": "Planung",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "plan_pruefung"
+        }
+      ]
+    },
+    {
+      "id": "plan_pruefung",
+      "kurztext": "Ein unabhängiger Prüfer ordnet jedem Abnahmekriterium Planpunkte zu und sucht Unbestelltes im Plan.",
+      "titel": "Plan-Prüfung",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "besteht nicht, neue Planversion",
+          "ziel": "planung"
+        },
+        {
+          "label": "besteht",
+          "ziel": "plan_freigabe"
+        }
+      ]
+    },
+    {
+      "id": "plan_freigabe",
+      "kurztext": "Falls eine Freigaberegel den Plan trifft: Der Plan steht als Kommentar im Ticket, der Lauf pausiert, bis ein Mensch freigibt.",
+      "titel": "Plan-Freigabe",
+      "typ": "pause",
+      "uebergaenge": [
+        {
+          "label": "freigegeben (oder nicht nötig)",
+          "ziel": "implementierung"
+        }
+      ]
+    },
+    {
+      "id": "implementierung",
+      "kurztext": "Der Agent setzt den Plan um und sichert den Code.",
+      "titel": "Implementierung",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "tests"
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "kurztext": "Der Testbefehl läuft. Bei Fehlschlägen korrigiert der Agent den Code und läuft erneut; der Plan bleibt gültig.",
+      "titel": "Tests",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "Fehlschlag, Korrektur",
+          "ziel": "implementierung"
+        },
+        {
+          "label": "Stillstand oder erschöpfte Versuche",
+          "ziel": "planung"
+        },
+        {
+          "label": "bestanden",
+          "ziel": "review"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "kurztext": "Pro Review-Ziel prüft ein eigener Reviewer den Diff, mit Bash- und Schreibzugriff.",
+      "reviewer_quellen": [
+        "defaults/review",
+        ".workflow/review"
+      ],
+      "titel": "Review",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "blockierender Befund",
+          "ziel": "planung"
+        },
+        {
+          "label": "bestanden",
+          "ziel": "abnahme"
+        }
+      ]
+    },
+    {
+      "id": "abnahme",
+      "kurztext": "Ein unabhängiger Prüfer urteilt je Abnahmekriterium, ob es erfüllt ist, mit Beleg.",
+      "titel": "Abnahme",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "Kriterium offen, mit Planpunkt",
+          "ziel": "implementierung"
+        },
+        {
+          "label": "Kriterium offen, ohne Planpunkt",
+          "ziel": "planung"
+        },
+        {
+          "label": "erfüllt",
+          "ziel": "freigaberegeln_diff"
+        }
+      ]
+    },
+    {
+      "id": "freigaberegeln_diff",
+      "kurztext": "Die Freigaberegeln werden gegen den fertigen Code ausgewertet.",
+      "titel": "Freigaberegeln für den Diff",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "merge_request"
+        }
+      ]
+    },
+    {
+      "id": "merge_request",
+      "kurztext": "Draft-MR mit Closes #<nr> und den Review-Hinweisen in der Beschreibung.",
+      "titel": "Merge-Request",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "code_freigabe"
+        }
+      ]
+    },
+    {
+      "id": "code_freigabe",
+      "kurztext": "Falls eine Freigaberegel greift: Der Lauf pausiert, bis ein Mensch den MR freigibt.",
+      "titel": "Code-Freigabe",
+      "typ": "pause",
+      "uebergaenge": [
+        {
+          "label": "freigegeben (oder nicht nötig)",
+          "ziel": "pipeline_pruefung"
+        }
+      ]
+    },
+    {
+      "id": "pipeline_pruefung",
+      "kurztext": "Die CI/CD-Pipeline wertet dieselben Regeln unabhängig vom Lauf neu aus. Sie checkt den PR-Code nie aus und führt ihn nie aus.",
+      "titel": "Pipeline-Prüfung",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "bestanden",
+          "ziel": "schranke"
+        }
+      ]
+    },
+    {
+      "id": "schranke",
+      "kurztext": "Öffnet nur, wenn sowohl die menschliche Code-Freigabe als auch die unabhängige Pipeline-Prüfung vorliegen.",
+      "titel": "Schranke",
+      "typ": "schranke",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "merge"
+        }
+      ]
+    },
+    {
+      "id": "merge",
+      "kurztext": "Der Lauf endet im Merge-Request. Merge und Deployment liegen danach bei den Menschen.",
+      "titel": "Merge",
+      "typ": "ende",
+      "uebergaenge": []
+    },
+    {
+      "id": "eskalation",
+      "kurztext": "Der Rücksprungzähler ist erschöpft. Der Lauf pausiert mit einer Rückfrage an einen Menschen.",
+      "titel": "Eskalation",
+      "typ": "eskalation",
+      "uebergaenge": [
+        {
+          "label": "Mensch entscheidet: weiter",
+          "ziel": "planung"
+        },
+        {
+          "label": "Mensch entscheidet: Abbruch",
+          "ziel": "abgebrochen"
+        }
+      ]
+    },
+    {
+      "id": "abgebrochen",
+      "kurztext": "Der Lauf endet ohne Merge-Request.",
+      "titel": "Abgebrochen",
+      "typ": "ende",
+      "uebergaenge": []
+    }
+  ],
+  "reviewer": {
+    "allgemein": [
+      "architektur",
+      "barrierefreiheit",
+      "codequalitaet",
+      "performance",
+      "security",
+      "testqualitaet"
+    ],
+    "projektspezifisch": [
+      "freigabe-integritaet",
+      "go-konventionen",
+      "tickettext-vertrauen",
+      "workflow-diagramm"
+    ]
+  }
+}

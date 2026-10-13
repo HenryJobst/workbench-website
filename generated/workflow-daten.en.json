@@ -1,0 +1,288 @@
+{
+  "beispiel_lauf": [
+    {
+      "phase": "plan_freigabe",
+      "text": "The plan is approved."
+    },
+    {
+      "phase": "implementierung",
+      "text": "The agent works on the feature branch."
+    },
+    {
+      "phase": "review",
+      "text": "A review run finds a blocking finding."
+    },
+    {
+      "phase": "planung",
+      "text": "Back to planning; the plan stays valid at its core."
+    },
+    {
+      "phase": "implementierung",
+      "text": "The agent implements the fix."
+    },
+    {
+      "phase": "review",
+      "text": "The second review run passes."
+    },
+    {
+      "phase": "abnahme",
+      "text": "All acceptance criteria are met."
+    },
+    {
+      "phase": "code_freigabe",
+      "text": "A human approves the code once every duty is met."
+    },
+    {
+      "phase": "pipeline_pruefung",
+      "text": "The pipeline independently confirms the same state."
+    },
+    {
+      "phase": "schranke",
+      "text": "The gate opens."
+    }
+  ],
+  "phasen": [
+    {
+      "id": "start",
+      "kurztext": "Create the branch, copy the ticket as ticket.md, write the state, push early.",
+      "titel": "Start",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "anforderungsanalyse"
+        }
+      ]
+    },
+    {
+      "id": "anforderungsanalyse",
+      "kurztext": "The agent derives checkable acceptance criteria. If the ticket is too vague, the run pauses with at most five clarifying questions in the ticket.",
+      "titel": "Requirements analysis",
+      "typ": "pause",
+      "uebergaenge": [
+        {
+          "label": "criteria derived",
+          "ziel": "planung"
+        }
+      ]
+    },
+    {
+      "id": "planung",
+      "kurztext": "The agent looks at the repo, reads the ticket, and writes the plan (goal, steps, affected areas).",
+      "titel": "Planning",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "plan_pruefung"
+        }
+      ]
+    },
+    {
+      "id": "plan_pruefung",
+      "kurztext": "An independent reviewer maps every acceptance criterion to plan items and looks for anything unordered in the plan.",
+      "titel": "Plan check",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "fails, new plan version",
+          "ziel": "planung"
+        },
+        {
+          "label": "passes",
+          "ziel": "plan_freigabe"
+        }
+      ]
+    },
+    {
+      "id": "plan_freigabe",
+      "kurztext": "If an approval rule applies to the plan: the plan is posted as a ticket comment, and the run pauses until a human approves it.",
+      "titel": "Plan approval",
+      "typ": "pause",
+      "uebergaenge": [
+        {
+          "label": "approved (or not required)",
+          "ziel": "implementierung"
+        }
+      ]
+    },
+    {
+      "id": "implementierung",
+      "kurztext": "The agent carries out the plan and saves the code.",
+      "titel": "Implementation",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "tests"
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "kurztext": "The test command runs. On failure the agent fixes the code and runs again; the plan stays valid.",
+      "titel": "Tests",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "failure, fix",
+          "ziel": "implementierung"
+        },
+        {
+          "label": "stalled or retries exhausted",
+          "ziel": "planung"
+        },
+        {
+          "label": "passed",
+          "ziel": "review"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "kurztext": "A separate reviewer checks the diff per review target, with shell and write access.",
+      "reviewer_quellen": [
+        "defaults/review",
+        ".workflow/review"
+      ],
+      "titel": "Review",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "blocking finding",
+          "ziel": "planung"
+        },
+        {
+          "label": "passed",
+          "ziel": "abnahme"
+        }
+      ]
+    },
+    {
+      "id": "abnahme",
+      "kurztext": "An independent reviewer judges each acceptance criterion as met or not, with evidence.",
+      "titel": "Acceptance",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "criterion open, has a plan item",
+          "ziel": "implementierung"
+        },
+        {
+          "label": "criterion open, no plan item",
+          "ziel": "planung"
+        },
+        {
+          "label": "met",
+          "ziel": "freigaberegeln_diff"
+        }
+      ]
+    },
+    {
+      "id": "freigaberegeln_diff",
+      "kurztext": "The approval rules are evaluated against the finished code.",
+      "titel": "Approval rules for the diff",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "merge_request"
+        }
+      ]
+    },
+    {
+      "id": "merge_request",
+      "kurztext": "Draft merge request with Closes #<nr> and the review notes in the description.",
+      "titel": "Merge request",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "code_freigabe"
+        }
+      ]
+    },
+    {
+      "id": "code_freigabe",
+      "kurztext": "If an approval rule applies: the run pauses until a human approves the merge request.",
+      "titel": "Code approval",
+      "typ": "pause",
+      "uebergaenge": [
+        {
+          "label": "approved (or not required)",
+          "ziel": "pipeline_pruefung"
+        }
+      ]
+    },
+    {
+      "id": "pipeline_pruefung",
+      "kurztext": "The CI/CD pipeline re-evaluates the same rules independently of the run. It never checks out or executes the PR code.",
+      "titel": "Pipeline check",
+      "typ": "normal",
+      "uebergaenge": [
+        {
+          "label": "passed",
+          "ziel": "schranke"
+        }
+      ]
+    },
+    {
+      "id": "schranke",
+      "kurztext": "Opens only when both the human code approval and the independent pipeline check are in place.",
+      "titel": "Gate",
+      "typ": "schranke",
+      "uebergaenge": [
+        {
+          "label": "",
+          "ziel": "merge"
+        }
+      ]
+    },
+    {
+      "id": "merge",
+      "kurztext": "The run ends at the merge request. Merge and deployment are then up to the humans.",
+      "titel": "Merge",
+      "typ": "ende",
+      "uebergaenge": []
+    },
+    {
+      "id": "eskalation",
+      "kurztext": "The retry-to-planning counter is exhausted. The run pauses with a question to a human.",
+      "titel": "Escalation",
+      "typ": "eskalation",
+      "uebergaenge": [
+        {
+          "label": "human decides: continue",
+          "ziel": "planung"
+        },
+        {
+          "label": "human decides: abort",
+          "ziel": "abgebrochen"
+        }
+      ]
+    },
+    {
+      "id": "abgebrochen",
+      "kurztext": "The run ends without a merge request.",
+      "titel": "Aborted",
+      "typ": "ende",
+      "uebergaenge": []
+    }
+  ],
+  "reviewer": {
+    "allgemein": [
+      "architektur",
+      "barrierefreiheit",
+      "codequalitaet",
+      "performance",
+      "security",
+      "testqualitaet"
+    ],
+    "projektspezifisch": [
+      "freigabe-integritaet",
+      "go-konventionen",
+      "tickettext-vertrauen",
+      "workflow-diagramm"
+    ]
+  }
+}

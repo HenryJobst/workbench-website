@@ -16,7 +16,7 @@ test:
   stage: test
   image: node:22-bookworm
   script:
-    - node --test test/
+    - node --test
 
 mirror-to-github:
   stage: deploy

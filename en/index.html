@@ -160,12 +160,29 @@
     margin: 0 0 1.5rem;
   }
   @media (max-width: 560px) {
-    table, thead, tbody, th, td, tr { display: block; }
+    table:not(.table-scroll table), thead, tbody, th, td, tr { display: block; }
     thead { display: none; }
     tr { border-bottom: 1px solid var(--border); padding: 0.75rem 0; }
     tbody tr:last-child { border-bottom: none; }
     td { border-bottom: none; padding: 0.15rem 0; }
     td:not(:first-child)::before { content: attr(data-label) ": "; color: var(--fg); }
+  }
+  .table-scroll { margin-bottom: 1.5rem; }
+  .table-scroll table { margin-bottom: 0; }
+  /* Die Preistabelle hat 5 Datenspalten: zeilenweises Stapeln (Preis: OSS/Single/Team/...,
+     dann Umfang: OSS/Single/...) reißt die Infos zu jeder Stufe auseinander, horizontales
+     Scrollen ist unschön. Auf schmalen Viewports deshalb eine separate, spaltenweise
+     gruppierte Kartenansicht statt der Tabelle -- Desktop zeigt weiter die echte Tabelle. */
+  .pricing-cards { display: none; }
+  @media (max-width: 560px) {
+    .table-scroll { display: none; }
+    .pricing-cards { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .pricing-card { border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
+    .pricing-card:last-child { border-bottom: none; padding-bottom: 0; }
+    .pricing-card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+    .pricing-card dl { margin: 0; }
+    .pricing-card dt { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0.5rem; }
+    .pricing-card dd { margin: 0; }
   }
 
   .principle-intro { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin: 1.75rem 0 0.75rem; }
@@ -563,6 +580,7 @@
     <p>
       Tiered by team size and number of repositories, not by pipeline runs.
     </p>
+    <div class="table-scroll">
     <table>
       <thead>
         <tr><th>&nbsp;</th><th>OSS</th><th>Single</th><th>Team</th><th>Business</th><th>Enterprise</th></tr>
@@ -571,10 +589,10 @@
         <tr>
           <td>Price</td>
           <td data-label="OSS">free</td>
-          <td data-label="Single"></td>
-          <td data-label="Team"></td>
-          <td data-label="Business"></td>
-          <td data-label="Enterprise"></td>
+          <td data-label="Single">on request</td>
+          <td data-label="Team">on request</td>
+          <td data-label="Business">on request</td>
+          <td data-label="Enterprise">on request</td>
         </tr>
         <tr>
           <td>Scope</td>
@@ -610,6 +628,59 @@
         </tr>
       </tbody>
     </table>
+    </div>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <h3>OSS</h3>
+        <dl>
+          <dt>Price</dt><dd>free</dd>
+          <dt>Scope</dt><dd>single license per project</dd>
+          <dt>Repositories</dt><dd>1 public open-source project</dd>
+          <dt>Git host</dt><dd>GitHub or GitLab</dd>
+          <dt>Support</dt><dd>community</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Single</h3>
+        <dl>
+          <dt>Price</dt><dd>on request</dd>
+          <dt>Scope</dt><dd>1 developer</dd>
+          <dt>Repositories</dt><dd>up to 2</dd>
+          <dt>Git host</dt><dd>GitHub or GitLab</dd>
+          <dt>Support</dt><dd>community</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Team</h3>
+        <dl>
+          <dt>Price</dt><dd>on request</dd>
+          <dt>Scope</dt><dd>up to 10</dd>
+          <dt>Repositories</dt><dd>up to 5</dd>
+          <dt>Git host</dt><dd>GitHub or GitLab</dd>
+          <dt>Support</dt><dd>email</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Business</h3>
+        <dl>
+          <dt>Price</dt><dd>on request</dd>
+          <dt>Scope</dt><dd>up to 50</dd>
+          <dt>Repositories</dt><dd>up to 25</dd>
+          <dt>Git host</dt><dd>both</dd>
+          <dt>Support</dt><dd>priority</dd>
+        </dl>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <dl>
+          <dt>Price</dt><dd>on request</dd>
+          <dt>Scope</dt><dd>custom</dd>
+          <dt>Repositories</dt><dd>unlimited</dd>
+          <dt>Git host</dt><dd>both</dd>
+          <dt>Support</dt><dd>SLA, onboarding, audit</dd>
+        </dl>
+      </div>
+    </div>
     <p class="comparison-note">
       OSS applies to one public repository under a recognized open-source license. Term for the other
       tiers: 12 months, auto-renewing with a notice period. The customer covers model costs through

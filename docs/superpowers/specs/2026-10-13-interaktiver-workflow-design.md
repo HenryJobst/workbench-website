@@ -1,30 +1,42 @@
 # Interaktiver Workflow (Ticket bis Merge) statt statischem Lebenszyklus-Block
 
-Status: entworfen, noch nicht umgesetzt
-Betroffene Repos: `workbench-website` (Darstellung), `workbench` (Datenquelle, Generator, CI)
+Status: Darstellung in `workbench-website` umgesetzt (Mermaid Flow Player, eigene Seite
+`/workflow-vorschau/` + `/en/workflow-preview/`, von der Hauptseite verlinkt). Die
+Daten-Synchronisation aus dem `workbench`-Repo ist **nicht** automatisiert — `generated/
+workflow-daten.de.json`/`.en.json` wurden einmalig manuell aus `workbench` exportiert und
+müssen bei jeder inhaltlichen Workflow-Änderung dort von Hand neu gezogen werden.
+
+Betroffene Repos: `workbench-website` (Darstellung, Generator), `workbench` (Datenquelle —
+Sync noch manuell, siehe „Sync-Mechanik" unten).
 
 ## Ziel
 
-Der Abschnitt `#lebenszyklus` (`index.html:318-358`) zeigt heute eine stark vereinfachte
-5-Schritte-Liste des Workbench-Workflows. Der reale Lauf ist deutlich reicher: Pausen,
-Rücksprünge, Eskalation, eine unabhängige Pipeline-Prüfung und eine Schranke, die nur öffnet,
-wenn menschliche Freigabe **und** Pipeline-Prüfung vorliegen. Dieser Abschnitt soll durch ein
-interaktives, animiertes Zustandsdiagramm ersetzt werden, das aus den echten Workflow-Quellen
-im `workbench`-Repo generiert wird und dort auch aktuell gehalten wird.
+Der Abschnitt `#lebenszyklus` zeigt eine stark vereinfachte 5-Schritte-Liste des
+Workbench-Workflows. Der reale Lauf ist deutlich reicher: Pausen, Rücksprünge, Eskalation,
+eine unabhängige Pipeline-Prüfung und eine Schranke, die nur öffnet, wenn menschliche
+Freigabe **und** Pipeline-Prüfung vorliegen. Umgesetzt wurde dafür **kein Ersatz** der
+5-Schritte-Liste, sondern eine zusätzliche, eigenständige Seite mit einem interaktiven,
+animierten Flussdiagramm aller 17 Phasen — verlinkt über einen CTA-Button direkt unter der
+5-Schritte-Liste auf `index.html`/`en/index.html`. Die einfache Liste bleibt als schneller
+Überblick, die neue Seite ist das vertiefende Detail für Interessierte.
 
-Die bestehende Vertrauensgrenzen-Grafik (`#architektur`, `index.html:408-462`) ist nicht Teil
-dieses Vorhabens — andere Fragestellung (wer vertraut wem), kein Phasenfluss.
+Die bestehende Vertrauensgrenzen-Grafik (`#architektur`) ist nicht Teil dieses Vorhabens —
+andere Fragestellung (wer vertraut wem), kein Phasenfluss.
 
 ## Nicht-Ziele (YAGNI, bewusst zurückgestellt)
 
 - Keine Verlinkung einzelner Phasen auf Endkunden-Dokumentationskapitel (erst relevant, wenn es
   eine öffentliche Nutzer-Doku gibt).
-- Keine automatische Mermaid-Ingestion (Markdy kann das grundsätzlich, aber unsere Daten
-  brauchen ohnehin ein eigenes Schema für Reviewer-Gruppen und Beispiel-Lauf-Text).
+- Keine dynamisch aus `workbench`-Verzeichnissen gelesenen Reviewer-Listen im Review-Knoten
+  (ursprünglich für die Markdy-Variante geplant, siehe „Verworfen" unten) — der Review-Knoten
+  zeigt aktuell nur den zusammenfassenden Kurztext, keine Dateinamen.
+- Keine automatisierte Cross-Repo-Synchronisation (siehe „Sync-Mechanik") — bewusst erstmal
+  manuell, bis sich zeigt, wie oft sich der reale Workflow tatsächlich ändert.
 
 ## Umfang des Diagramms
 
-Vollständiger Lauf von Ticket bis Merge, als Zustandsdiagramm:
+Vollständiger Lauf von Ticket bis Merge, als Flussdiagramm (17 Knoten, siehe `generated/
+workflow-daten.de.json`/`.en.json`):
 
 ```
 Start
@@ -48,122 +60,160 @@ Start
 
 Eigener Pfad: **Eskalation**, erreichbar aus Planung und Implementierung, wenn der
 Rücksprungzähler (`max_rueckspruenge`) erschöpft ist. Von dort entscheidet ein Mensch, ob es
-zurück zur Planung geht oder der Lauf abgebrochen wird.
+zurück zur Planung geht (`merge`) oder der Lauf abgebrochen wird (`abgebrochen`).
 
-### Review-Knoten: zwei sichtbare Reviewer-Gruppen
+### Automatischer Durchlauf: der „glückliche Pfad"
 
-Der Review-Knoten zeigt beim Aufklappen zwei Listen, beide vollständig, nicht nur als
-Kategorie-Kurztext:
+Statt einer kuratierten, mit dem `#demo`-Abschnitt der Website abgestimmten Beispiel-Erzählung
+(wie ursprünglich für die Markdy-Variante geplant) läuft die automatische Vorschau aktuell
+entlang des **glücklichen Pfads**: alle Phasen außer Eskalation und dem Abbruch-Endknoten, in
+deklarierter Reihenfolge (`gluecklicherPfad()` in `js/workflow-mermaid.js`). Einfacher zu
+pflegen, da er sich automatisch aus den Phasendaten ergibt statt aus einer separat
+gepflegten Schrittliste — erzählt aber keine eigenständige Geschichte mit Rücksprüngen/Befund
+wie der `#demo`-Abschnitt. Siehe „Offene Punkte" unten.
 
-- **Allgemein (Plugin):** alle Dateinamen aus `defaults/review/*.md` im `workbench`-Repo
-  (Stand bei Entwurf: Architektur, Barrierefreiheit, Codequalität, Performance, Security,
-  Testqualität).
-- **Projektspezifisch (Workbench selbst als Beispiel):** alle Dateinamen aus
-  `.workflow/review/*.md` im `workbench`-Repo (Stand bei Entwurf: freigabe-integritaet,
-  go-konventionen, tickettext-vertrauen, workflow-diagramm — letzteres neu, siehe unten).
+## Datenquelle: `generated/workflow-daten.{de,en}.json` (`workbench-website`-Repo)
 
-Beide Listen werden vom Generator zur Erzeugungszeit aus den tatsächlichen Verzeichnissen
-gelesen, nicht in der YAML-Quelle hart kodiert — sonst veraltet genau diese Stelle leise.
+JSON statt der ursprünglich geplanten YAML-Datei im `workbench`-Repo — Schema pro Sprache
+eine Datei mit `{ phasen: [...] }`, jede Phase:
 
-### Beispiel-Lauf (animierte Erzählung)
+- `id` (für Mermaid-Knoten-IDs und Übergangsziele)
+- `titel`, `kurztext` (Knotentext: Titel fett, Kurztext darunter)
+- `typ`: `normal` | `pause` (wartet auf Mensch) | `schranke` | `eskalation` | `ende`
+- `uebergaenge`: Liste von `{ ziel, label }` (Label leer = unbeschrifteter Pfeil)
 
-Eine Schrittfolge, die dieselbe Geschichte erzählt wie der bestehende `#demo`-Abschnitt der
-Website (genehmigter Plan, Implementierung im Feature-Branch, ein Review-Lauf mit
-blockierendem Befund, Rücksprung, Korrektur, Abnahme, Pipeline-Prüfung, Schranke öffnet) —
-beide Abschnitte der Seite erzählen dieselbe Demo, nicht zwei widersprüchliche.
+Kein separates `beispiel_lauf`-Feld (siehe „glücklicher Pfad" oben — wird aus `phasen`
+abgeleitet, nicht separat gepflegt). Terminologie durchgehend nach `CONTEXT.md` (Lauf,
+Freigabe, Eskalation, Rücksprung, Abnahme, Review-Ziel, Befund, Schranke …).
 
-## Datenquelle (`workbench`-Repo)
+**Aktueller Stand:** Diese beiden Dateien liegen fest im `workbench-website`-Repo und wurden
+einmalig per Hand aus `workbench` exportiert (Commit „Workflow-Daten aus workbench neu
+generiert"). Es gibt noch keinen Generator/Export-Skript *in* `workbench`, das sie erzeugt —
+siehe „Sync-Mechanik".
 
-Neue Datei `docs/workflow-website.yaml`: Liste von Phasen-Knoten mit
+## Generator: `js/workflow-mermaid-script.js` (`workbench-website`-Repo, läuft im Browser)
 
-- `id`, `titel`, `kurztext` (Text im Detail-Panel)
-- `typ`: `normal` | `pause` (wartet auf Mensch) | `schranke` | `eskalation`
-- `uebergaenge`: Liste von Zielen mit Label (z. B. „Befund" → zurück zu `planung`)
-- beim Review-Knoten zusätzlich eine Markierung, welche Verzeichnisse der Generator für die
-  Reviewer-Listen einliest
+Anders als ursprünglich geplant (Build-Zeit-Generator im `workbench`-Repo, der eine fertige
+Szenen-Datei committet) läuft die Übersetzung JSON → Diagrammquelltext **zur Laufzeit im
+Browser**: `erzeugeMermaidScript(daten, { dunkel })` baut aus den Phasendaten gültigen
+Mermaid-Flowchart-Quelltext:
 
-Zusätzlich ein `beispiel_lauf`: geordnete Liste von Schritten (Phasen-ID + Beispieltext), die
-die obige Demo-Geschichte entlang der echten Phasen erzählt.
+- `%%{init: {"theme": "base", "themeVariables": {...}}}%%`-Direktive als erste Zeile (steuert
+  `lineColor` sowie — nur im Dark Mode — `edgeLabelBackground`; Mermaids Standard-Theme
+  hardcodet sonst dunkle Kantenfarben und ein helles Lavendel für Kantenbeschriftungen,
+  unabhängig vom Seiten-Theme)
+- Knotenform nach `typ`: Raute (`schranke`), Sechseck (`eskalation`), Stadium (`ende`),
+  sonst Rechteck; `pause`-Typ zusätzlich gestrichelt per `classDef`
+- Knoten-Label als Markdown-String (`` `**Titel**\nKurztext` ``) statt normaler
+  Zeichenkette, damit der Titel fett vom Kurztext absetzt — dafür ein **echtes** Newline
+  im generierten Quelltext, kein literales `\n` (Markdown-Strings übersetzen das anders als
+  normale Mermaid-Strings nicht in einen Zeilenumbruch)
+- `%% narrate <id>: <text>`-Kommentarzeilen für den Erzähltext des Players (sonst Fallback
+  auf das rohe Knoten-Label inklusive literalem `\n`)
+- `classDef`-Zeilen für fünf Zustände (`normal`, `pause`, `decision`, `success`, `failure`),
+  je in heller und dunkler Variante — Erfolgs-/Abbruch-Endknoten werden datengetrieben über
+  die Schranke-Übergänge bestimmt (`ermittleErfolgsEnden()`), nicht über feste IDs
 
-Terminologie durchgehend nach `CONTEXT.md` (Lauf, Freigabe, Eskalation, Rücksprung, Abnahme,
-Review-Ziel, Befund, Schranke …), damit Begriffe zur restlichen Workbench-Doku und zum
-Glossar passen.
+Kein Generator-Schritt in `workbench` — die reine JSON-Quelle reicht, Mermaid-Syntax ist
+Darstellungsdetail der Website, kein Teil der Datenquelle.
 
-## Generator (`workbench`-Repo)
+## Rendering: Mermaid + Mermaid Flow Player (`workbench-website`-Repo)
 
-Ein Skript (z. B. `scripts/workflow_website_export.py`) liest `docs/workflow-website.yaml` und
-die beiden Reviewer-Verzeichnisse und erzeugt daraus MarkdyScript-Quelltext (Diagrammtyp
-`state`, automatisches Layout — keine manuellen Koordinaten) plus die Begleitdaten für den
-Beispiel-Lauf. Ergebnis ist eine generierte Datei im `workbench-website`-Repo (z. B.
-`generated/workflow-scene.js`), die vom Website-JS geladen wird.
+Bibliothek: **Mermaid.js** (Rendering des Flowcharts) + **Mermaid Flow Player**
+(github.com/jagreehal/mermaid-flow-player, Wiedergabe/Interaktivität obendrauf). Ersetzt die
+ursprünglich geplante Markdy-Variante — beide frühere Kandidaten (Markdy, FlowStory) wurden
+verworfen, weil ihre Knotenfarben/-formen nicht CSS-steuerbar waren. Bei Mermaid erzeugen wir
+den Quelltext selbst (siehe oben), die `classDef`-Farben liegen damit vollständig in unserer
+Hand, auch wenn Mermaid sie intern als `!important`-Inline-Style ins SVG schreibt.
 
-## Rendering (`workbench-website`-Repo)
+**Vendoring:** `scripts/vendor-mermaid-flow-player.sh` lädt feste Versionen von
+`mermaid.min.js` (global/IIFE-Build) und dem Flow-Player-Kern `index.js` direkt von jsDelivr
+nach `vendor/mermaid-flow-player/` — kein Build-Schritt nötig (anders als bei Markdy, das
+gebündelt werden musste). Genutzt wird die **programmatische** API (`createFlowPlayer`,
+`index.js`), nicht die Auto-Erkennungs-Variante (`auto.global.js`): Nur die programmatische
+API unterstützt `dim`, Laufzeit-Moduswechsel (`sequential`/`interactive`) und eigene
+Steuerelemente ohne die mitgelieferte (nicht zu unserem Seitenstil passende) Button-Leiste.
 
-Bibliothek: **Markdy** (`@markdy/renderer-dom` + `@markdy/core`, MIT-Lizenz), DOM/SVG-basiert
-über die Web Animations API, Diagrammtyp `state`. Begründung gegenüber der ursprünglich
-vorgeschlagenen Canvas-Alternative FlowStory: Markdys automatisches Layout passt zu einem
-Workflow, der sich aus generierten, veränderlichen Daten speist (keine von Hand gepflegten
-Pixel-Koordinaten); DOM-Rendering ist der bessere Ausgangspunkt für Barrierefreiheit als reines
-Canvas-Zeichnen.
+**Bootstrap:** `js/workflow-mermaid.js` (`initWorkflowMermaid(container)`):
 
-Da `@markdy/renderer-dom` kein fertiges Browser-Bundle im Repo mitliefert, wird es **einmalig**
-in der `workbench`-CI gebündelt (z. B. mit esbuild/tsup) und als statisches Modul in
-`workbench-website` vendored (z. B. `vendor/markdy/markdy-renderer.min.js` + zugehörige
-`LICENSE`-Datei für die MIT-Zuordnung). Dieses Bundle wird **nicht** bei jeder inhaltlichen
-Workflow-Änderung neu gebaut, sondern nur bei einem bewussten Versions-Update.
+- lädt die JSON-Daten, erzeugt den Mermaid-Quelltext, rendert ihn selbst per
+  `mermaid.run()` (der Flow-Player rendert das SVG nicht selbst — erwartet ein bereits
+  vorhandenes `<svg>` im Root-Element)
+- bindet `createFlowPlayer` an denselben Wrapper, mit `theme: "auto"`, `dim: "others"`,
+  `visited: true`, `speed: 1.2`
+- eigene Steuerleiste (keine Bibliotheks-UI): **Von vorn**, **Zurück**, **Pause/Fortsetzen**,
+  **Weiter**, Moduswechsel (**Automatisch** ↔ **Zum Erkunden klicken**) — nutzt
+  `player.previousStep()`/`nextStep()`/`pause()`/`resume()`/`reset()`/`play()`
+- automatischer Durchlauf startet per `IntersectionObserver` (Schwelle 0 — das Diagramm ist
+  deutlich höher als jedes normale Browserfenster, eine höhere Schwelle wäre praktisch nie
+  erreichbar), einmalig pro Sichtbarwerden, kein Dauerloop
+- `prefers-reduced-motion: reduce` startet direkt im interaktiven statt sequenziellen Modus
+  (kein Autoplay)
+- eigene Hervorhebung des aktiven Knotens/der bereits durchlaufenen Pfeile per
+  `MutationObserver` + direktem Inline-Style-Override (Akzentfarbe, hell/dunkel angepasst) —
+  nötig, weil die klassenbasierten Hervorhebungsregeln des Players gegen die `!important`-
+  Inline-Styles aus unseren `classDef`-Farben verlieren; Pfeilspitzen folgen automatisch über
+  SVG2 `fill: context-stroke`
+- re-rendert bei `prefers-color-scheme`-Wechsel (destroy + neu aufbauen)
 
-Steuerung: eigenes kleines JS-Modul in der Website (kein Framework) ruft `createDiagram()` mit
-dem generierten Szenentext auf und stellt eigene Play/Pause/Loop/Zurück-Buttons im bestehenden
-Seitenstil bereit (Markdy liefert nur die Render-API, keine fertige Button-Leiste). Verhalten:
+### Barrierefreiheit
 
-- Beim Eintritt ins Viewport (IntersectionObserver) startet eine automatische Vorschau-Schleife
-  entlang des Beispiel-Laufs.
-- Jede Interaktion (Klick/Taste auf einen Button oder Knoten) beendet den Automatik-Modus
-  dauerhaft für diese Seitenansicht und wechselt in manuelle Schritt-Steuerung
-  (Weiter/Zurück/Zum Anfang).
-- Hover/Fokus pausiert die Automatik, ohne sie zu beenden.
-- `prefers-reduced-motion: reduce` verhindert Autoplay von Anfang an (nur erster Frame,
-  Steuerung bleibt manuell bedienbar).
+- `role="img"` + `aria-label` auf dem Diagramm-Container
+- `aria-live="polite"` auf dem Erzähltext-Absatz
+- sichtbare Textzusammenfassung unterhalb des Diagramms, jetzt mit `.sr-only` nur für
+  Screenreader/No-JS sichtbar (nicht mehr redundant zur Grafik für sehende Nutzer:innen) —
+  gleiche Konvention wie die bestehende Vertrauensgrenzen-Grafik
 
-### Barrierefreiheit (bewusste Ergänzung, nicht Teil von Markdy selbst)
+## Verworfen: Markdy, zwei sichtbare Reviewer-Gruppen im Review-Knoten
 
-- `aria-live="polite"` auf dem Container des Erzähltexts/Detail-Panels, damit Schrittwechsel
-  auch ohne Sehen der Animation wahrnehmbar sind.
-- `role="img"` + `aria-label` auf dem Diagramm-Container.
-- Eine sichtbare Textzusammenfassung unterhalb des Diagramms, generiert aus denselben
-  Phasendaten — gleiche Konvention wie die bestehende Vertrauensgrenzen-Grafik
-  (`index.html:463-465`: Diagramm + Caption-Text).
+Die ursprünglich geplante Markdy-Variante (DOM/SVG via Web Animations API) wurde nach
+Prototyping verworfen — wie FlowStory davor hatte sie keine CSS-steuerbaren Knotenfarben.
+Alle Markdy-Dateien wurden aus dem Repo entfernt (`vendor/markdy/`, `scripts/
+vendor-markdy.sh`, zugehörige JS-Module/Tests). Mit Markdy fiel auch die ursprünglich
+geplante Funktion weg, im Review-Knoten die tatsächlichen Dateinamen aus
+`defaults/review/*.md` und `.workflow/review/*.md` (beide im `workbench`-Repo) als zwei
+vollständige Listen anzuzeigen — der aktuelle Review-Knoten zeigt nur zusammenfassenden
+Kurztext. Bei Bedarf nachrüstbar (würde eine Erweiterung des JSON-Schemas um diese beiden
+Listen plus deren Pflege in `workbench` erfordern).
 
-## Sync-Mechanik zwischen den Repos
+## Sync-Mechanik zwischen den Repos (weiterhin nicht umgesetzt)
 
-Zwei getrennte Update-Pfade mit unterschiedlicher Taktung:
+**Aktueller Stand:** rein manuell. Ändert sich der reale Workflow in `workbench`
+(`maschine.py`, `state.py`, `docs/architektur.md` o. ä.), bleiben `generated/
+workflow-daten.{de,en}.json` in `workbench-website` unverändert, bis jemand sie von Hand neu
+exportiert — es gibt weder ein Export-Skript in `workbench` noch einen CI-Job, der das
+anstößt. Für die vendored Bibliotheken (`mermaid.min.js`, Flow-Player) gilt ohnehin nur
+seltenes, bewusstes Versions-Update von Hand (`scripts/vendor-mermaid-flow-player.sh`).
 
-1. **Vendor-Bundle (Markdy-Renderer).** Selten. Nur bei einem bewussten Versions-Update von
-   Markdy, manuell angestoßen, einmalig in der `workbench`-CI gebaut und als Commit/PR ins
-   `workbench-website`-Repo gegeben.
-2. **Generierte Szene (Workflow-Inhalt).** Bei jeder Änderung an `docs/workflow-website.yaml`
-   oder an `defaults/review/*.md`/`.workflow/review/*.md`: ein CI-Job in `workbench`
-   (GitLab, da dort die produktive Pipeline läuft) führt den Export aus und öffnet einen PR
-   (kein Auto-Merge, kein Direkt-Push auf `main`) im `workbench-website`-Repo. Ein Mensch prüft
-   und mergt — Workbench gibt sich hier wie überall sonst keine eigene Freigabe. Technisch
-   analog zum bestehenden `mirror-to-github`-Job: neues, eng begrenztes Secret mit
-   Schreibrecht nur auf diesen generierten Pfad.
+**Ursprünglich geplant** (für die Markdy-Variante, Schema-Details nicht mehr aktuell, Grund-
+idee weiterhin gültig): ein CI-Job in `workbench` exportiert bei jeder Änderung an den
+Workflow-Quellen automatisch die aktuellen Phasendaten und öffnet einen PR (kein Auto-Merge,
+kein Direkt-Push auf `main`) im `workbench-website`-Repo — analog zum bestehenden
+`mirror-to-github`-Job, mit einem eng begrenzten Secret, Schreibrecht nur auf den generierten
+Pfad. Für die aktuelle JSON-Datenquelle wäre das Format des Exports entsprechend anzupassen
+(JSON statt YAML+MarkdyScript, siehe „Datenquelle" oben).
 
-### Neues Review-Ziel: Aktualität des Workflow-Diagramms
+### Review-Ziel „Aktualität des Workflow-Diagramms" (weiterhin nicht angelegt)
 
-Neue Datei `.workflow/review/workflow-diagramm.md` im `workbench`-Repo (projektspezifisches
-Review-Ziel, ergänzt die bestehenden drei eigenen Ziele, ersetzt keines). Regel: Ändert ein
-Diff eine Phasen-Definition, einen Phasenübergang oder eine Freigaberegel (z. B. in
-`maschine.py`, `state.py`, `docs/architektur.md`), ohne dass `docs/workflow-website.yaml` im
-selben Diff mitgeändert wurde, ist das ein blockierender Befund. Dieses Ziel wird als Teil der
-Umsetzung gleich mit angelegt, nicht nachträglich.
+Ursprünglich geplant: neue Datei `.workflow/review/workflow-diagramm.md` im `workbench`-Repo
+(projektspezifisches Review-Ziel), die blockiert, wenn ein Diff eine Phasen-Definition, einen
+Phasenübergang oder eine Freigaberegel ändert, ohne dass die Workflow-Datenquelle im selben
+Diff mitgeändert wurde. Setzt die Umsetzung der Sync-Mechanik voraus (verweist sonst auf eine
+Datenquelle, die es in `workbench` noch gar nicht gibt) — folgerichtig ebenfalls noch nicht
+angelegt.
 
-## Offene Punkte für die Implementierungsplanung
+## Offene Punkte
 
-- Genaues YAML-Schema (Feldnamen, Pflichtfelder) für `docs/workflow-website.yaml`.
-- Exakter MarkdyScript-Dialekt für `state`-Diagramme (Syntax für Beats, bedingte Übergänge,
-  Knotentypen) — vor der Implementierung gegen die tatsächliche Markdy-Dokumentation/Beispiele
-  prüfen.
-- Namensgebung und genaue Rechte des neuen Cross-Repo-Secrets.
-- Visuelles Theming von Markdy (Farben/Typografie) auf den bestehenden minimalistischen
-  Seitenstil (`#111111`-Linien, dezente Graustufen).
+- **Sync-Mechanik umsetzen** (oben) — größter verbleibender Punkt, betrifft das
+  `workbench`-Repo: Export-Skript + CI-Job, der PRs nach `workbench-website` öffnet.
+- Review-Ziel „Aktualität des Workflow-Diagramms" in `workbench` anlegen, sobald die
+  Sync-Mechanik steht.
+- Entscheiden, ob der automatische Durchlauf beim kuratierten `#demo`-narrativ (mit
+  Rücksprung/Befund/Korrektur) bleiben soll, wie ursprünglich geplant, oder der jetzige
+  einfachere „glückliche Pfad" ausreicht.
+- Entscheiden, ob die Reviewer-Listen im Review-Knoten (siehe „Verworfen") nachgerüstet
+  werden sollen, und falls ja, mit welchem JSON-Schema.
+- Bekannte Einschränkung dokumentiert, nicht behoben: der manuelle „Weiter"-Button nimmt an
+  echten Verzweigungen (z. B. Korrekturschleifen) die zuerst im generierten Skript deklarierte
+  Kante ohne Rückfrage — kann dort vom „glücklichen Pfad" der automatischen Wiedergabe
+  abweichen.

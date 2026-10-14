@@ -24,6 +24,12 @@ function escapeLabel(text) {
   return text.replaceAll('"', "'");
 }
 
+function escapeNarrationText(text) {
+  // "%% narrate id: text" ist eine Ein-Zeilen-Direktive -- ein enthaltener Zeilenumbruch
+  // würde die Zeile vorzeitig beenden und den Rest als eigene (ignorierte) Kommentarzeile lesen.
+  return text.replace(/\s*\n\s*/g, " ").trim();
+}
+
 function knotenZeile(phase, klasseFuerEnde) {
   const label = escapeLabel(`${phase.titel}\\n${phase.kurztext}`);
   if (phase.typ === "schranke") return `    ${phase.id}{"${label}"}`;
@@ -61,6 +67,15 @@ export function erzeugeMermaidScript(daten, { dunkel = false } = {}) {
   const erfolgsEnden = ermittleErfolgsEnden(daten);
   for (const phase of daten.phasen) {
     zeilen.push(knotenZeile(phase, erfolgsEnden));
+  }
+  zeilen.push("");
+
+  // "%% narrate <id>: <text>"-Kommentare steuern den Erzähltext der Player-eigenen
+  // Narration-Anzeige. Ohne das fällt der Player auf das rohe Knoten-Label zurück --
+  // das enthält bei uns ein literales "\n" (für den Zeilenumbruch im Knoten selbst), das
+  // in der Erzähltext-Anzeige als Zeichenfolge "\n" sichtbar würde statt als Umbruch.
+  for (const phase of daten.phasen) {
+    zeilen.push(`    %% narrate ${phase.id}: ${escapeNarrationText(phase.kurztext)}`);
   }
   zeilen.push("");
 

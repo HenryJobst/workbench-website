@@ -72,6 +72,23 @@ test("Pause-Phase bekommt die Klasse pause, Schranke und Eskalation die Klasse d
   assert.match(script, /^ {4}class schranke,eskalation decision$/m);
 });
 
+test("erzeugt eine %% narrate-Zeile je Phase mit dem reinen Kurztext (ohne \\n)", () => {
+  const script = erzeugeMermaidScript(minimalDaten);
+  assert.match(script, /^ {4}%% narrate start: Anfang\.$/m);
+  assert.match(script, /^ {4}%% narrate schranke: Prüft\.$/m);
+});
+
+test("Zeilenumbrüche im Kurztext werden in der narrate-Zeile zu Leerzeichen", () => {
+  const daten = {
+    phasen: [
+      { id: "mehrzeilig", titel: "Mehrzeilig", typ: "normal", uebergaenge: [],
+        kurztext: "Erste Zeile.\nZweite Zeile." },
+    ],
+  };
+  const script = erzeugeMermaidScript(daten);
+  assert.match(script, /^ {4}%% narrate mehrzeilig: Erste Zeile\. Zweite Zeile\.$/m);
+});
+
 test("dunkel:true erzeugt die dunklen classDef-Farben statt der hellen", () => {
   const hell = erzeugeMermaidScript(minimalDaten);
   const dunkel = erzeugeMermaidScript(minimalDaten, { dunkel: true });

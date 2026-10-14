@@ -71,6 +71,21 @@
     border-radius: 6px;
   }
   code { font-family: var(--mono); font-size: 0.85em; }
+  .cta {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--fg);
+    background: transparent;
+    border: 1px solid var(--fg);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  .cta.secondary:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); }
+  .workflow-diagramm-steuerung { display: flex; gap: 0.75rem; margin: 1rem 0; flex-wrap: wrap; }
+  .workflow-diagramm-erzaehltext { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin: 0 0 1rem; min-height: 1.2em; }
   #workflow-mermaid-canvas {
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -125,7 +140,6 @@
 </footer>
 
 <script src="../vendor/mermaid-flow-player/mermaid.min.js"></script>
-<script src="../vendor/mermaid-flow-player/auto.global.js"></script>
 <script type="module">
   import { initWorkflowMermaid } from "../js/workflow-mermaid.js";
   const container = document.getElementById("workflow-mermaid-canvas");

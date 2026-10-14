@@ -18,5 +18,5 @@ Anschließend die geänderten Dateien in `vendor/mermaid-flow-player/` committen
 
 ## Hinweis zur Ladereihenfolge
 
-`js/workflow-mermaid.js` lädt `mermaid.min.js` vor `auto.global.js`, damit Letzteres nicht
+`js/workflow-mermaid.js` lädt `mermaid.min.js` vor `index.js`, damit Letzteres nicht
 versucht, Mermaid von jsDelivr nachzuladen (siehe Kommentar in diesem Script).

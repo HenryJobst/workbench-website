@@ -18,17 +18,17 @@ MFP_VER="${2:-$(curl -sf "https://data.jsdelivr.com/v1/packages/npm/mermaid-flow
 echo "mermaid@$MERMAID_VER, mermaid-flow-player@$MFP_VER"
 
 curl -sfL -o "$ZIEL/mermaid.min.js" "https://cdn.jsdelivr.net/npm/mermaid@${MERMAID_VER}/dist/mermaid.min.js"
-curl -sfL -o "$ZIEL/auto.global.js" "https://cdn.jsdelivr.net/npm/mermaid-flow-player@${MFP_VER}/auto.global.js"
+# index.js statt auto.global.js: wir steuern den Player programmatisch über createFlowPlayer
+# (dim, mode-Umschalter per destroy+recreate), nicht über die Auto-Erkennung von .mermaid-Blöcken.
+curl -sfL -o "$ZIEL/index.js" "https://cdn.jsdelivr.net/npm/mermaid-flow-player@${MFP_VER}/index.js"
 # mermaid-flow-player hat keine eigene LICENSE-Datei im Repo, nur "license": "MIT" in package.json.
 curl -sfL -o "$ZIEL/LICENSE-mermaid" "https://raw.githubusercontent.com/mermaid-js/mermaid/develop/LICENSE"
 
-# auto.global.js lädt Mermaid selbst nach, falls window.mermaid beim Laden fehlt --
-# ausschließlich über eine fest einprogrammierte jsDelivr-URL (kein lokaler Pfad konfigurierbar).
-# Wir laden deshalb unser eigenes vendortes mermaid.min.js zuerst per <script>-Tag; auto.global.js
-# erkennt dann window.mermaid als bereits vorhanden und überspringt seinen eigenen CDN-Fetch.
-# Die Datei selbst bleibt unverändert (keine Patches an vendortem Code).
-if ! grep -q 'cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js' "$ZIEL/auto.global.js"; then
-  echo "Warnung: erwartete Mermaid-CDN-URL nicht in auto.global.js gefunden -- Selbstlade-Mechanismus ggf. geändert, bitte js/workflow-mermaid.js prüfen." >&2
+# index.js (anders als auto.global.js) lädt Mermaid NICHT selbst nach -- erwartet schlicht
+# globalThis.mermaid als bereits vorhanden. Wir laden deshalb unser eigenes vendortes
+# mermaid.min.js per <script>-Tag, bevor js/workflow-mermaid.js createFlowPlayer aufruft.
+if ! grep -q 'globalThis.mermaid' "$ZIEL/index.js"; then
+  echo "Warnung: erwartete globalThis.mermaid-Referenz nicht in index.js gefunden -- Mechanismus ggf. geändert, bitte js/workflow-mermaid.js prüfen." >&2
 fi
 
 cat > "$ZIEL/VERSION.md" <<EOF
@@ -52,7 +52,7 @@ Anschließend die geänderten Dateien in \`vendor/mermaid-flow-player/\` committ
 
 ## Hinweis zur Ladereihenfolge
 
-\`js/workflow-mermaid.js\` lädt \`mermaid.min.js\` vor \`auto.global.js\`, damit Letzteres nicht
+\`js/workflow-mermaid.js\` lädt \`mermaid.min.js\` vor \`index.js\`, damit Letzteres nicht
 versucht, Mermaid von jsDelivr nachzuladen (siehe Kommentar in diesem Script).
 EOF
 

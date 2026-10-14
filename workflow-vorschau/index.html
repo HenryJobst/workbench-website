@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow-Vorschau — MergeWarden</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://mergewarden.de/workflow-vorschau/">
+<link rel="alternate" hreflang="de" href="https://mergewarden.de/workflow-vorschau/">
+<link rel="alternate" hreflang="en" href="https://mergewarden.de/en/workflow-preview/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #111111;
+    --muted: #666666;
+    --border: #e4e4e4;
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121212;
+      --fg: #f2f2f2;
+      --muted: #9a9a9a;
+      --border: #333333;
+      --nav-bg: rgba(18, 18, 18, 0.92);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--fg);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--fg); }
+  nav {
+    position: sticky;
+    top: 0;
+    background: var(--nav-bg);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  nav .brand { font-weight: 600; letter-spacing: -0.01em; text-decoration: none; }
+  main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  p.note {
+    color: var(--muted);
+    font-size: 0.92rem;
+    max-width: 42rem;
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  code { font-family: var(--mono); font-size: 0.85em; }
+  #workflow-mermaid-canvas {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 24rem;
+    overflow-x: auto;
+  }
+  .diagram-caption { color: var(--muted); font-size: 0.9rem; max-width: 42rem; margin: 1rem 0 0; }
+  footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a class="brand" href="/">MergeWarden</a>
+    <a href="/en/workflow-preview/">English</a>
+  </div>
+</nav>
+
+<main>
+  <h1>Workflow-Vorschau</h1>
+  <p class="note">
+    Interner Entwurf, noch nicht auf der Hauptseite verlinkt -- bis zur Freigabe nur über diesen
+    direkten Link erreichbar. Zweiter Anlauf für den animierten Workflow (erster Anlauf mit
+    Markdy und FlowStory wieder verworfen, siehe Commit-Historie), diesmal mit
+    <a href="https://github.com/jagreehal/mermaid-flow-player" target="_blank" rel="noopener">Mermaid Flow Player</a>.
+    Alle 17 Phasen, Farben selbst festgelegt (<code>classDef</code> im generierten
+    Mermaid-Code, daher voll steuerbar).
+  </p>
+
+  <div id="workflow-mermaid-canvas"></div>
+  <p class="diagram-caption">
+    Start, Anforderungsanalyse, Planung, Plan-Prüfung, Plan-Freigabe (falls nötig),
+    Implementierung, Tests mit Korrekturschleife, Review, Abnahme, Freigaberegeln für den
+    Diff, Merge-Request, Code-Freigabe (falls nötig), eine unabhängige Pipeline-Prüfung und
+    die Schranke, die erst öffnet, wenn Freigabe und Pipeline-Prüfung beide vorliegen.
+    Rücksprünge aus Plan-Prüfung, Tests, Review und Abnahme führen zurück in die Planung
+    oder Implementierung; ein erschöpfter Rücksprungzähler führt in eine Eskalation, die ein
+    Mensch entscheidet.
+  </p>
+</main>
+
+<footer>
+  <a href="/">Zur Startseite</a>
+</footer>
+
+<script src="../vendor/mermaid-flow-player/mermaid.min.js"></script>
+<script src="../vendor/mermaid-flow-player/auto.global.js"></script>
+<script type="module">
+  import { initWorkflowMermaid } from "../js/workflow-mermaid.js";
+  const container = document.getElementById("workflow-mermaid-canvas");
+  initWorkflowMermaid(container).catch((fehler) => {
+    console.error("Workflow-Vorschau konnte nicht geladen werden:", fehler);
+  });
+</script>
+</body>
+</html>

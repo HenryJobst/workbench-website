@@ -72,6 +72,14 @@ test("Pause-Phase bekommt die Klasse pause, Schranke und Eskalation die Klasse d
   assert.match(script, /^ {4}class schranke,eskalation decision$/m);
 });
 
+test("dunkel:true erzeugt die dunklen classDef-Farben statt der hellen", () => {
+  const hell = erzeugeMermaidScript(minimalDaten);
+  const dunkel = erzeugeMermaidScript(minimalDaten, { dunkel: true });
+  assert.match(hell, /classDef normal fill:#ffffff,stroke:#111111,color:#111111/);
+  assert.match(dunkel, /classDef normal fill:#1e1e1e,stroke:#f2f2f2,color:#f2f2f2/);
+  assert.doesNotMatch(dunkel, /fill:#ffffff/);
+});
+
 test("verarbeitet die echten generierten Daten (de) ohne Fehler, keine doppelten Knoten-IDs", () => {
   const daten = JSON.parse(readFileSync(new URL("../generated/workflow-daten.de.json", import.meta.url), "utf8"));
   const script = erzeugeMermaidScript(daten);

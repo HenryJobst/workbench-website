@@ -1,13 +1,23 @@
-// classDef-Farben bewusst monochrom (schwarz/weiß), passend zum reduzierten Seitenstil --
-// anders als bei Markdy/FlowStory ist das hier kein CSS-Kampf: Mermaid schreibt die classDef-
-// Farben zwar als Inline-Style mit !important ins SVG (von außen per CSS nicht übersteuerbar),
-// aber wir erzeugen den Mermaid-Code selbst und legen die Farben direkt hier fest.
-const CLASS_DEFS = [
+// classDef-Farben bewusst monochrom, passend zum reduzierten Seitenstil -- anders als bei
+// Markdy/FlowStory ist das hier kein CSS-Kampf: Mermaid schreibt die classDef-Farben zwar als
+// Inline-Style mit !important ins SVG (von außen per CSS nicht übersteuerbar), aber wir
+// erzeugen den Mermaid-Code selbst und legen die Farben direkt hier fest. Der Player selbst
+// folgt prefers-color-scheme schon (Theme "auto": Canvas-Hintergrund, Kanten, Label-Plates
+// passen sich an) -- nur unsere eigenen classDef-Füllfarben nicht automatisch, deshalb zwei
+// Sätze statt CSS-Variablen im generierten SVG (die Mermaid ignorieren würde).
+const CLASS_DEFS_HELL = [
   'classDef normal fill:#ffffff,stroke:#111111,color:#111111',
   'classDef pause fill:#ffffff,stroke:#111111,color:#111111,stroke-dasharray: 4 3',
   'classDef decision fill:#ffffff,stroke:#111111,color:#111111',
   'classDef success fill:#111111,stroke:#111111,color:#ffffff',
   'classDef failure fill:#ffffff,stroke:#111111,color:#666666',
+];
+const CLASS_DEFS_DUNKEL = [
+  'classDef normal fill:#1e1e1e,stroke:#f2f2f2,color:#f2f2f2',
+  'classDef pause fill:#1e1e1e,stroke:#f2f2f2,color:#f2f2f2,stroke-dasharray: 4 3',
+  'classDef decision fill:#1e1e1e,stroke:#f2f2f2,color:#f2f2f2',
+  'classDef success fill:#f2f2f2,stroke:#f2f2f2,color:#111111',
+  'classDef failure fill:#1e1e1e,stroke:#f2f2f2,color:#9a9a9a',
 ];
 
 function escapeLabel(text) {
@@ -44,7 +54,7 @@ function ermittleErfolgsEnden(daten) {
   return erfolgsEnden;
 }
 
-export function erzeugeMermaidScript(daten) {
+export function erzeugeMermaidScript(daten, { dunkel = false } = {}) {
   const zeilen = [];
   zeilen.push("flowchart TD");
 
@@ -64,7 +74,8 @@ export function erzeugeMermaidScript(daten) {
   }
   zeilen.push("");
 
-  zeilen.push(...CLASS_DEFS.map((zeile) => `    ${zeile}`));
+  const classDefs = dunkel ? CLASS_DEFS_DUNKEL : CLASS_DEFS_HELL;
+  zeilen.push(...classDefs.map((zeile) => `    ${zeile}`));
   zeilen.push("");
 
   const phasenNachKlasse = new Map();

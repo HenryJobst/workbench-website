@@ -25,21 +25,21 @@ test("erzeugt eine flowchart-TD-Direktive", () => {
   assert.match(script, /^flowchart TD$/m);
 });
 
-test("normale Phase wird als Rechteck-Knoten deklariert", () => {
+test("normale Phase wird als Rechteck-Knoten mit Markdown-Label deklariert (Titel fett, echter Zeilenumbruch)", () => {
   const script = erzeugeMermaidScript(minimalDaten);
-  assert.match(script, /^ {4}start\["Start\\nAnfang\."\]$/m);
+  assert.match(script, /^ {4}start\["`\*\*Start\*\*\nAnfang\.`"\]$/m);
 });
 
 test("Schranke wird als Raute, Eskalation als Sechseck deklariert", () => {
   const script = erzeugeMermaidScript(minimalDaten);
-  assert.match(script, /^ {4}schranke\{"Schranke\\nPrüft\."\}$/m);
-  assert.match(script, /^ {4}eskalation\{\{"Eskalation\\nFragt nach\."\}\}$/m);
+  assert.match(script, /^ {4}schranke\{"`\*\*Schranke\*\*\nPrüft\.`"\}$/m);
+  assert.match(script, /^ {4}eskalation\{\{"`\*\*Eskalation\*\*\nFragt nach\.`"\}\}$/m);
 });
 
 test("Ende-Phasen werden als Stadium-Knoten deklariert", () => {
   const script = erzeugeMermaidScript(minimalDaten);
-  assert.match(script, /^ {4}merge\(\["Merge\\nFertig\."\]\)$/m);
-  assert.match(script, /^ {4}abgebrochen\(\["Abgebrochen\\nKein Merge\."\]\)$/m);
+  assert.match(script, /^ {4}merge\(\["`\*\*Merge\*\*\nFertig\.`"\]\)$/m);
+  assert.match(script, /^ {4}abgebrochen\(\["`\*\*Abgebrochen\*\*\nKein Merge\.`"\]\)$/m);
 });
 
 test("Übergänge mit Label erzeugen zitierte beschriftete Pfeile, ohne Label unbeschriftete", () => {
@@ -95,6 +95,20 @@ test("dunkel:true erzeugt die dunklen classDef-Farben statt der hellen", () => {
   assert.match(hell, /classDef normal fill:#ffffff,stroke:#111111,color:#111111/);
   assert.match(dunkel, /classDef normal fill:#1e1e1e,stroke:#f2f2f2,color:#f2f2f2/);
   assert.doesNotMatch(dunkel, /fill:#ffffff/);
+});
+
+test("%%{init}%%-Direktive mit heller/dunkler lineColor steht als erste Zeile (sonst wirkungslos)", () => {
+  const hell = erzeugeMermaidScript(minimalDaten);
+  const dunkel = erzeugeMermaidScript(minimalDaten, { dunkel: true });
+  assert.match(hell.split("\n")[0], /^%%\{init: \{"theme": "base", "themeVariables": \{"lineColor":"#111111"\}\}\}%%$/);
+  assert.match(dunkel.split("\n")[0], /"lineColor":"#f2f2f2"/);
+});
+
+test("Dunkle Variante setzt zusätzlich edgeLabelBackground auf einen hellen Grauton (helle lässt das Theme-Default)", () => {
+  const hell = erzeugeMermaidScript(minimalDaten);
+  const dunkel = erzeugeMermaidScript(minimalDaten, { dunkel: true });
+  assert.doesNotMatch(hell.split("\n")[0], /edgeLabelBackground/);
+  assert.match(dunkel.split("\n")[0], /"edgeLabelBackground":"#d4d4d4"/);
 });
 
 test("verarbeitet die echten generierten Daten (de) ohne Fehler, keine doppelten Knoten-IDs", () => {

@@ -13,4 +13,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://mergewarden.de/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mergewarden.de/"/>
   </url>
+  <url>
+    <loc>https://mergewarden.de/workflow-vorschau/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://mergewarden.de/workflow-vorschau/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mergewarden.de/en/workflow-preview/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mergewarden.de/workflow-vorschau/"/>
+  </url>
+  <url>
+    <loc>https://mergewarden.de/en/workflow-preview/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://mergewarden.de/workflow-vorschau/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mergewarden.de/en/workflow-preview/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mergewarden.de/workflow-vorschau/"/>
+  </url>
 </urlset>

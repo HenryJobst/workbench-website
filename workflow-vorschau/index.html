@@ -3,9 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workflow-Vorschau — MergeWarden</title>
-<meta name="robots" content="noindex">
-<link rel="canonical" href="https://mergewarden.de/workflow-vorschau/">
+<title>Workflow-Vorschau — MergeWarden</title><link rel="canonical" href="https://mergewarden.de/workflow-vorschau/">
 <link rel="alternate" hreflang="de" href="https://mergewarden.de/workflow-vorschau/">
 <link rel="alternate" hreflang="en" href="https://mergewarden.de/en/workflow-preview/">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -93,6 +91,17 @@
     overflow-x: auto;
   }
   .diagram-caption { color: var(--muted); font-size: 0.9rem; max-width: 42rem; margin: 1rem 0 0; }
+  /* Für role="img"-Grafiken: Langbeschreibung bleibt für Screenreader und No-JS-Fälle
+     erhalten, ist aber für sehende Nutzer:innen nicht redundant zur Grafik sichtbar. */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
   footer {
     max-width: 1100px;
     margin: 0 auto;
@@ -114,17 +123,9 @@
 
 <main>
   <h1>Workflow-Vorschau</h1>
-  <p class="note">
-    Interner Entwurf, noch nicht auf der Hauptseite verlinkt -- bis zur Freigabe nur über diesen
-    direkten Link erreichbar. Zweiter Anlauf für den animierten Workflow (erster Anlauf mit
-    Markdy und FlowStory wieder verworfen, siehe Commit-Historie), diesmal mit
-    <a href="https://github.com/jagreehal/mermaid-flow-player" target="_blank" rel="noopener">Mermaid Flow Player</a>.
-    Alle 17 Phasen, Farben selbst festgelegt (<code>classDef</code> im generierten
-    Mermaid-Code, daher voll steuerbar).
-  </p>
 
   <div id="workflow-mermaid-canvas"></div>
-  <p class="diagram-caption">
+  <p class="diagram-caption sr-only">
     Start, Anforderungsanalyse, Planung, Plan-Prüfung, Plan-Freigabe (falls nötig),
     Implementierung, Tests mit Korrekturschleife, Review, Abnahme, Freigaberegeln für den
     Diff, Merge-Request, Code-Freigabe (falls nötig), eine unabhängige Pipeline-Prüfung und

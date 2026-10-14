@@ -20,8 +20,18 @@ const CLASS_DEFS_DUNKEL = [
   'classDef failure fill:#1e1e1e,stroke:#f2f2f2,color:#9a9a9a',
 ];
 
+// Auch der Rahmen jedes Knotens (unabhängig von seiner classDef) -- gebraucht von
+// workflow-mermaid.js, um den aktuell aktiven Knoten farblich abzuheben und ihn beim
+// Zurücksetzen wieder auf diesen Grundton zu bringen.
+export function linienfarbeFuer(dunkel) {
+  return dunkel ? "#f2f2f2" : "#111111";
+}
+
 function escapeLabel(text) {
-  return text.replaceAll('"', "'");
+  // Backtick zusätzlich zum Anführungszeichen escapen: Knoten-Labels sind jetzt Markdown-Strings
+  // (Backtick-umschlossen, siehe knotenZeile), ein enthaltener Backtick würde den String vorzeitig
+  // beenden.
+  return text.replaceAll('"', "'").replaceAll("`", "'");
 }
 
 function escapeNarrationText(text) {
@@ -31,7 +41,13 @@ function escapeNarrationText(text) {
 }
 
 function knotenZeile(phase, klasseFuerEnde) {
-  const label = escapeLabel(`${phase.titel}\\n${phase.kurztext}`);
+  // Markdown-String (Backtick-umschlossen) statt normaler Zeichenkette: so lässt sich der Titel
+  // fett setzen, damit er sich optisch vom Fließtext absetzt. Dafür muss der Zeilenumbruch ein
+  // echtes Newline sein -- das literale "\n" (wie bei normalen Mermaid-Strings) wird in
+  // Markdown-Strings nicht in einen Umbruch übersetzt, sondern als Text "\n" angezeigt.
+  const titel = escapeLabel(phase.titel);
+  const kurztext = escapeLabel(phase.kurztext);
+  const label = `\`**${titel}**\n${kurztext}\``;
   if (phase.typ === "schranke") return `    ${phase.id}{"${label}"}`;
   if (phase.typ === "eskalation") return `    ${phase.id}{{"${label}"}}`;
   if (phase.typ === "ende") return `    ${phase.id}(["${label}"])`;
@@ -62,6 +78,18 @@ function ermittleErfolgsEnden(daten) {
 
 export function erzeugeMermaidScript(daten, { dunkel = false } = {}) {
   const zeilen = [];
+  // Die Verbindungslinien kommen nicht aus unserem classDef (das steuert nur Knotenfarben) --
+  // Mermaid zeichnet sie über sein eigenes Standard-Theme (stroke:#333333 fest einprogrammiert),
+  // das auf dunklem Hintergrund praktisch unsichtbar wäre. Init-Direktive muss die erste Zeile
+  // des Skripts sein.
+  const linienfarbe = linienfarbeFuer(dunkel);
+  const themenVariablen = { lineColor: linienfarbe };
+  // Der Hintergrund der Kantenbeschriftungen ("Kriterien abgeleitet" etc.) kommt ebenfalls aus
+  // dem Standard-Theme (ein helles Lavendel, fest für primaryColor-Ableitung gedacht) -- im
+  // Dark Mode wirkt das als Fremdkörper. Nur dort auf einen hellen Grauton umstellen, der
+  // dunkle Text (#333, ebenfalls aus dem Standard-Theme) bleibt darauf gut lesbar.
+  if (dunkel) themenVariablen.edgeLabelBackground = "#d4d4d4";
+  zeilen.push(`%%{init: {"theme": "base", "themeVariables": ${JSON.stringify(themenVariablen)}}}%%`);
   zeilen.push("flowchart TD");
 
   const erfolgsEnden = ermittleErfolgsEnden(daten);

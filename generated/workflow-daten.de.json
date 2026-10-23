@@ -216,7 +216,7 @@
     },
     {
       "id": "pipeline_pruefung",
-      "kurztext": "Die CI/CD-Pipeline wertet dieselben Regeln unabhängig vom Lauf neu aus. Sie checkt den PR-Code nie aus und führt ihn nie aus.",
+      "kurztext": "Die CI/CD-Pipeline wertet dieselben Regeln unabhängig vom Lauf neu aus. Sie checkt den MR-Code nie aus und führt ihn nie aus.",
       "titel": "Pipeline-Prüfung",
       "typ": "normal",
       "uebergaenge": [

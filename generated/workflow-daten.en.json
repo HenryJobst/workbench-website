@@ -216,7 +216,7 @@
     },
     {
       "id": "pipeline_pruefung",
-      "kurztext": "The CI/CD pipeline re-evaluates the same rules independently of the run. It never checks out or executes the PR code.",
+      "kurztext": "The CI/CD pipeline re-evaluates the same rules independently of the run. It never checks out or executes the MR code.",
       "titel": "Pipeline check",
       "typ": "normal",
       "uebergaenge": [
